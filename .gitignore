@@ -1,0 +1,25 @@
+# Visual Studio 缓存与用户设置
+.vs/
+
+# 编译输出目录
+Debug/
+Release/
+x64/
+x86/
+
+# 编译中间产物与可执行文件
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.iobj
+*.ipdb
+*.exp
+*.lib
+
+# 生成日志
+*.tlog/
+*.log
+*.recipe
+*.lastbuildstate
