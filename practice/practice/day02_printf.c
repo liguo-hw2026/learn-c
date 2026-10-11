@@ -2,6 +2,12 @@
 
 int main(void)
 {
-    printf("day02: printf 格式化练习\n");
+    printf("=== START ===\n");
+    printf("%5d|\n", 33);
+    printf("%-5d|\n", 33);
+    printf("%05d|\n", 33);
+    // 宽度只是最少位数，超过不截取
+    printf("%3d|\n", 12345);
+    printf("%8.2f|\n", 3.14159);   // 宽8、2位小数 → "    3.14|"
     return 0;
 }
