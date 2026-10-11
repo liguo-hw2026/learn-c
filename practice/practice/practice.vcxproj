@@ -150,7 +150,11 @@
            每天新建练习文件时，把前一天的 .c 这样设成排除即可 -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="day02_types.c" />
+    <ClCompile Include="day02_types.c">
+      <!-- 内容属第 53-63 讲（数据类型），留到 W1 第七天机动日再启用 -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day02_var_expr.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

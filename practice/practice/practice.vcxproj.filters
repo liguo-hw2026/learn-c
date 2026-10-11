@@ -21,5 +21,8 @@
     <ClCompile Include="day02_types.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="day02_var_expr.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
