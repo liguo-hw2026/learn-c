@@ -76,7 +76,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <!-- /Zi 而非 /ZI：关闭「编辑并继续」，避免增量编译漏掉新加的代码行 -->
+      <!-- /utf-8 必须加：否则 MSVC 按代码页936(GBK)解析 UTF-8 无BOM 文件，
+           中文注释会导致预处理器静默吞掉紧随其后的代码行（报 C4819） -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <!-- /Zi 而非 /ZI：关闭「编辑并继续」，减少调试期增量补丁带来的怪异现象 -->
+      <!-- （注：此前误以为是它导致漏编译，实测真凶是缺少 /utf-8，见下方） -->
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -92,6 +96,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <!-- /utf-8 必须加：否则 MSVC 按代码页936(GBK)解析 UTF-8 无BOM 文件，
+           中文注释会导致预处理器静默吞掉紧随其后的代码行（报 C4819） -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -106,7 +113,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <!-- /Zi 而非 /ZI：关闭「编辑并继续」，避免增量编译漏掉新加的代码行 -->
+      <!-- /utf-8 必须加：否则 MSVC 按代码页936(GBK)解析 UTF-8 无BOM 文件，
+           中文注释会导致预处理器静默吞掉紧随其后的代码行（报 C4819） -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <!-- /Zi 而非 /ZI：关闭「编辑并继续」，减少调试期增量补丁带来的怪异现象 -->
+      <!-- （注：此前误以为是它导致漏编译，实测真凶是缺少 /utf-8，见下方） -->
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -122,6 +133,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <!-- /utf-8 必须加：否则 MSVC 按代码页936(GBK)解析 UTF-8 无BOM 文件，
+           中文注释会导致预处理器静默吞掉紧随其后的代码行（报 C4819） -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
