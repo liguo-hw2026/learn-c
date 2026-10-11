@@ -145,7 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="day02_printf.c" />
+    <ClCompile Include="day02_printf.c">
+      <!-- 从生成中排除：一个 VS 项目只能有一个 main，否则报 LNK2005 多重定义。
+           每天新建练习文件时，把前一天的 .c 这样设成排除即可 -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day02_types.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
