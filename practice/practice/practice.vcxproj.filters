@@ -24,5 +24,8 @@
     <ClCompile Include="day02_var_expr.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="day03_branch.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
