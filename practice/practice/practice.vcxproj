@@ -157,7 +157,11 @@
     <ClCompile Include="day02_var_expr.c">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="day03_branch.c" />
+    <ClCompile Include="day03_branch.c">
+      <!-- 从生成中排除：W1-D4 起由 day04_loop.c 提供 main()，避免 LNK2005 多重定义 -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day04_loop.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
