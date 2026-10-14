@@ -36,9 +36,12 @@
  */
 
 #include <stdio.h>
+#include<stdlib.h>
+#include<time.h>
 
 int main(void)
 {
+   
     /* ===== TODO 1：while 统计位数（P33） =====
      * 任务：输入一个整数，输出它是几位数。
      * 提示：回想今天讨论的 P33——循环外先 n++; x/=10; 数掉并划掉个位；
@@ -46,30 +49,98 @@ int main(void)
      * 思考：输入 0 时循环为何一次都不进，却能得到 1？这正是对 0 边界的正确处理。
      * 预测：352 -> 3 位 ；0 -> 1 位
      * （自己写代码：声明 x,n；读入；循环外数+划一位；循环内数剩下的）
-     */
-
-    /* ===== TODO 2：用 do-while 改写 TODO 1（P34） =====
+     
+    int n = 0;
+    int x = 0;
+    int ret = 0;
+    printf("enter a number:\n");
+    ret = scanf("%d",&x);
+    if (x < 0) {
+        printf("invalid number!\n");
+    }
+    else if (ret == 0) {
+        printf("invalid number!\n");
+    }
+    else {
+        n++;
+        x /= 10;
+        while (x > 0) {
+        x /= 10;
+        n++;
+        }
+        printf("digit:%d\n", n);
+    }
+     ===== TODO 2：用 do-while 改写 TODO 1（P34） =====
      * 任务：把 TODO 1 用 do-while 重写一遍。
      * 提示：do-while 循环体至少执行一次。想想 x==0 时它和 while 版有什么区别。
      * 预测：输出应与 TODO 1 一致。
      * （自己写代码）
-     */
-
+     
+    int n = 0;
+    int x = 0;
+    printf("enter a number:\n");
+    scanf("%d", &x);
+    do {
+        n++;
+        x /= 10;
+    } while (x > 0);
+    printf("digit:%d\n", n);
+    */
     /* ===== TODO 3：猜数游戏（P35） =====
      * 任务：程序定一个秘密数（例如 57），用户反复猜；猜中用 break 退出，
      *       猜错提示"too small"或"too big"。
      * 提示：可用 do-while 或 while(1)+break 实现"猜中才停"。
      * 预测：猜中即停，打印 hit。
      * （自己写代码）
-     */
-
+     
+    srand(time(0));
+    int hit = rand() % 100;
+    int x = 0;
+    int ret = 0;
+    do {
+        printf("enter a number(0-100):\n");
+        ret = scanf("%d", &x);
+        if (x < 0 || x>100) {
+            printf("invalid number!\n");
+            continue;
+        }
+        else if (ret == 0) {
+            printf("invalid number!\n");
+            scanf("%*s");
+            continue;
+        }
+        else if (x>hit) {
+            printf("too big!\n");
+        }
+        else if (x < hit) {
+            printf("too small!\n");
+        }
+        else
+            printf("the hit number is:%d\n", x);
+    } while (x != hit);
+    */
     /* ===== TODO 4：求平均数，遇 -1 结束（P36） =====
      * 任务：读入若干整数，遇 -1 停止，输出它们的平均数。
      * 提示：累加器 sum + 计数器 n；注意 n==0 时别除以零（否则运行崩溃）。
      * 预测：输入 10 20 30 -1 -> 平均数 = 20.00
      * （自己写代码）
-     */
-
+     
+    int x = 0;
+    int sum = 0;
+    int count = 0;
+    float ave = 0.0;
+    do {
+        printf("enter a number:\n");
+        scanf("%d",&x);
+        if (x == -1) {
+            break;
+        }
+        sum += x;
+        count++;
+    } while (x != -1);
+    ave = 1.0 * sum / count;
+    printf("the average is %f\n", ave);
+    */
     /* ===== TODO 5：整数求逆（P37） =====
      * 任务：输入一个正整数，反向输出各位（12345 -> 54321）。
      * 提示：x%10 取末位；rev = rev*10 + 末位 拼接；x/=10 去掉末位。
