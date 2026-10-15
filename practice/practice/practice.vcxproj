@@ -161,7 +161,11 @@
       <!-- 从生成中排除：W1-D4 起由 day04_loop.c 提供 main()，避免 LNK2005 多重定义 -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="day04_loop.c" />
+    <ClCompile Include="day04_loop.c">
+      <!-- 从生成中排除：W1-D5 起由 day05_array.c 提供 main()，避免 LNK2005 多重定义。D4 已闭环，练习归档 -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day05_array.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
