@@ -165,11 +165,12 @@
       <!-- 从生成中排除：W1-D5 起由 day05_array.c 提供 main()，避免 LNK2005 多重定义。D4 已闭环，练习归档 -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="day05_array.c" />
-    <ClCompile Include="day06_array2.c">
-      <!-- 预建骨架（W1-D6 P77-79），今日不编译；D6 开始时由 agent 改 Include 为 day06 并排除 day05，避免 LNK2005 多重 main -->
+    <ClCompile Include="day05_array.c">
+      <!-- 从生成中排除：W1-D6 起由 day06_array2.c 提供 main()，避免 LNK2005 多重定义。D5 已闭环，练习归档 -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="day06_array2.c" />
+    <!-- W1-D6 起启用（P77-79）；D7 开始时由 agent 排除本文件并启用下一日 .c，避免 LNK2005 多重 main -->
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
