@@ -166,6 +166,10 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day05_array.c" />
+    <ClCompile Include="day06_array2.c">
+      <!-- 预建骨架（W1-D6 P77-79），今日不编译；D6 开始时由 agent 改 Include 为 day06 并排除 day05，避免 LNK2005 多重 main -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
