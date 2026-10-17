@@ -37,7 +37,18 @@ int main(void)
      * 任务：找出数组最大值并打印其下标。
      * 提示：先令 max=a[0]、idx=0，从 i=1 起比较，更大就更新 max 和 idx。
      * 预测：{8,3,9,2,7,5} → max=9 at index 2
-     */
+     
+    int max[] = { 8,3,9,2,7,5,10,16,};
+    int index = 0;
+    int MAX = max[0];
+    for (int i = 1; i < sizeof(max) / sizeof(max[0]); i++) {
+        if (max[i] > MAX) {
+            MAX = max[i];
+            index = i;
+        }
+    }
+    printf("the MAX is:max[%d]=%d", index,MAX);
+    */
 #pragma region TODO1 参考（展开看，写自己代码不需要）
     /*
     int a[6] = { 8, 3, 9, 2, 7, 5 };
@@ -54,7 +65,19 @@ int main(void)
      * 任务：把数组原地逆序（不借助第二个数组）。
      * 提示：首尾两两交换，循环到中点 i < n/2；配对下标 i 与 n-1-i。
      * 预测：{1,2,3,4,5} → 5 4 3 2 1
-     */
+     
+    int A[] = { 1,2,3,4,5 };
+    int n = sizeof(A) / sizeof(A[0]);
+    for (int i = 0,t=0; i <n/2; i++) {
+        t = A[i];
+        A[i] = A[n - 1 - i];
+        A[n - 1 - i] = t;
+    }
+    printf("the new is:");
+    for (int i = 0; i < n; i++) {
+        printf("%d ",A[i]);
+    }
+    */
 #pragma region TODO2 参考（展开看，写自己代码不需要）
     /*
     int a[5] = { 1, 2, 3, 4, 5 };
@@ -72,7 +95,24 @@ int main(void)
      *       只需筛到 i*i<=N（同 D4 的 √x 优化思想）。
      * 预测：2 3 5 7 11 13 17 19 23 29
      * 关联：D4 你是“逐个试除到 √x”判单个数；今天用“数组批量标记”一次性生成素数表。
-     */
+     
+#define N 30 
+    int isprime[N+1];
+    for (int i=2; i <=N; i++) {
+        isprime[i] = 1;
+    }
+    for (int i = 2; i*i <= N; i++){
+        if (isprime[i] == 1) {
+            for (int j = i * i; j <= N; j += i)
+                isprime[j] = 0;
+        }
+        }
+    printf("prime is:\n");
+    for (int i = 2; i <= N; i++) {
+        if (isprime[i] == 1)
+            printf("%d ",i);
+    }
+    */
 #pragma region TODO3 参考（展开看，写自己代码不需要）
     /*
     #define N 30
@@ -90,6 +130,25 @@ int main(void)
      * 提示：int m[3][3]={{1,2,3},{4,5,6},{7,8,9}}; 外层 i 行、内层 j 列。
      *       内存中“行优先”：m[0][0],m[0][1],m[0][2],m[1][0]... 连续。
      * 预测：rsum = 6,15,24 ；csum = 12,15,18
+    
+    int m[3][3] = { {1,2,3 } ,{ 4, 5, 6 }, { 7, 8, 9 }
+};
+     int rsum = 0;
+     int csum = 0;
+     for (int i = 0; i < 3; i++) {
+         for (int j = 0; j < 3; j++) {
+             rsum += m[i][j];
+         }
+         printf("the rsum is:%d ", rsum);
+         rsum = 0;
+     }
+     for (int j = 0; j < 3; j++) {
+         for (int i = 0; i< 3; i++) {
+             csum += m[i][j];
+         }
+         printf("the csum is:%d ", csum);
+         csum = 0;
+     }
      */
 #pragma region TODO4 参考（展开看，写自己代码不需要）
     /*
@@ -110,7 +169,23 @@ int main(void)
      * 提示：外层轮数 n-1；内层相邻比较+交换（借 t）；swapped 标志提前退出。
      * 预测：1 2 3 5 9
      * 关联：swapped 标志套路 = D4 TODO9 嵌套循环跳出同源。
-     */
+
+int a[] = { 5,2,9,1,3, };
+int n = sizeof(a) / sizeof(a[0]);
+int t = 0;
+for (int i = 0; i < n-1; i++){
+    for (int j = 0; j < n-1-i; j++) {
+        if (a[j] > a[j + 1]) {
+            t = a[j];
+            a[j] = a[j+1];
+            a[j+1] = t;
+        }
+    }
+}
+for (int i = 0; i < n; i++) {
+    printf("%d ", a[i]);
+}
+*/
 #pragma region TODO5 参考（展开看，写自己代码不需要）
     /*
     int a[5] = { 5, 2, 9, 1, 3 };
