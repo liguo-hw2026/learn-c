@@ -63,7 +63,12 @@ int main(void)
      * 任务：定义 s1="hello"（自带 '\0'）与 s2={'h','e','l','l','o'}（无 '\0'），
      *       分别 printf("%s\n", s1/s2)，观察 s2 为何会打印到内存里下一个 '\0' 才停。
      * 预测：s1 正常打印 hello；s2 打印 hello 后继续吐乱码直到碰巧遇到 '\0'。
-     */
+     
+    char* s1 = "hello";
+    char s2[] = { 'h','e','l','l','o' };
+    printf("%s\n", s1);
+    printf("%s\n", s2);
+    */
 #pragma region TODO1 参考（展开看，写自己代码不需要）
     /*
     char s1[] = "hello";
@@ -81,6 +86,12 @@ int main(void)
      *       %7s 最多读 7 字符 + '\0'，绝不越界；%s 无宽度保护，输入超长会越界写坏内存。
      * 要点：宽度应写成 sizeof(buf)-1。
      */
+    char buf[8] = {0};
+ /*   scanf("%7s", buf);
+    printf("%s\n", buf);*/
+    scanf("%s", buf);
+    printf("%s\n", buf);
+    
 #pragma region TODO2 参考（展开看，写自己代码不需要）
     /*
     char buf[8];
@@ -96,7 +107,15 @@ int main(void)
      *       char b[][8] = { "Mon", "Tue", "Wed" };    // 二维字符数组：连续存放，每行 8 字节
      * 预测：两者打印结果一样（Mon Tue Wed），但内存布局不同：
      *       a 里每个元素是指针；b 是 3×8 的连续字节块。
-     */
+    char* a[] = { "mon","tue","wed" };
+    char b[][8]= { "mon","tue","wed" };
+    for (int i = 0; i < 3; i++) {
+        printf("%s\n", a[i]);
+    }
+    for (int i = 0; i < 3; i++) {
+        printf("%s\n", b[i]);
+    }
+    */
 #pragma region TODO3 参考（展开看，写自己代码不需要）
     /*
     char *a[] = { "Mon", "Tue", "Wed" };
@@ -111,7 +130,20 @@ int main(void)
     /* ===== TODO 4：自己实现 my_strlen → P92 =====
      * 任务：不调库，写一个遍历到 '\0' 返回长度的函数。
      * 预测："hello" → 5；"" → 0。（本文件已提供 my_strlen，直接调用对比库 strlen）
-     */
+     
+    char* s = "hello world";
+    int i = 0;
+    int count = 0;
+    while (s[i] != 0) {
+        if (s[i] == ' ') {
+            i++;
+            continue;
+        }
+        i++;
+        count++;
+    }
+    printf("%d", count);
+    */
 #pragma region TODO4 参考（展开看，写自己代码不需要）
     /*
     printf("my_strlen=%d  lib_strlen=%d\n", my_strlen("hello"), (int)strlen("hello"));
@@ -121,7 +153,15 @@ int main(void)
     /* ===== TODO 5：统计字符串中的数字字符个数（计划自测题） =====
      * 任务：调用 count_digit(s)，统计 s 中 '0'..'9' 的个数。
      * 预测："a1b22c3" → 4；"no digit" → 0。
-     */
+  
+    char *s="a1b22c3";
+    int c = 0;
+    for (int i = 0; s[i] != '\0'; i++) {
+        if (s[i] >= '0'&&s[i] <= '9')
+            c++;
+    }
+    printf("the count is:%d\n", c);
+    */
 #pragma region TODO5 参考（展开看，写自己代码不需要）
     /*
     printf("digits=%d\n", count_digit("a1b22c3"));  // 4

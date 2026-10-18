@@ -173,8 +173,12 @@
       <!-- 从生成中排除：main() 由 day07_str.c（第 2 周第 3 天）提供，避免 LNK2005 多重定义（day06 已闭环归档） -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="day07_str.c" />
-    <!-- 第 2 周第 3 天 起启用（字符数组/字符串，翁恺 P87–95）；第 2 周第 4 天 开始时由 agent 排除本文件并启用下一日 .c，避免 LNK2005 多重 main -->
+    <ClCompile Include="day07_str.c">
+      <!-- 从生成中排除：main() 由 day08_func.c（第 2 周第 4 天）提供，避免 LNK2005 多重定义（day07 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day08_func.c" />
+    <!-- 第 2 周第 4 天 起启用（函数·上，翁恺 P67–70）；第 2 周第 5 天 开始时由 agent 排除本文件并启用下一日 .c，避免 LNK2005 多重 main -->
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
