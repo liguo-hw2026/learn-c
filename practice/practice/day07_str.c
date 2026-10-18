@@ -1,6 +1,5 @@
 /*
  * day07_str.c - 第 2 周第 3 天 · 字符数组与字符串（翁恺 V1 第 87–95 讲）
- *   数组作函数参数退化（sizeof 退化成指针）的自检也落在本日（自 第 2 周第 2 天 移入）。
  *
  * ⚠️ 提示骨架：每题的"参考写法"用 #pragma region 折叠（见各 TODO 末尾）。
  *    VS 折叠：Ctrl+M, Ctrl+M 折叠/展开单个；Ctrl+M, Ctrl+O 折叠全部。
@@ -13,30 +12,32 @@
  *    https://www.bilibili.com/video/BV1XZ4y1S7e1
  * 📄 参考：D1「C 字符串 / C 输入输出」
  *
- * TODO 清单（严格对齐 P87–95 真实分P内容，不超纲）：
- *   1  字符数组 vs 字符串（'\0' 结尾）                   → P87
- *   2  my_strlen（遍历到 '\0'），对比库 strlen           → P92
- *   3  数组作函数参数退化：sizeof(arr) 退化成指针大小     → 自检（自 第 2 周第 2 天 移入）
- *   4  字符串输入输出：scanf("%s") 遇空格即停 + 宽度保护  → P89
- *   5  统计字符串中数字字符个数 count_digit              → 计划自测题
+ * ✅ TODO ↔ 分P 对照（已复核：本骨架 5 条全部落在 P87–95 内）：
+ *   TODO1  字符数组 vs 字符串（'\0' 结尾）                   → P87
+ *   TODO2  字符串输入输出：scanf("%s") 遇空格即停 + 宽度保护  → P89
+ *   TODO3  字符串数组（char *a[] / char a[][10]）            → P90
+ *   TODO4  my_strlen（遍历到 '\0'），对比库 strlen           → P92
+ *   TODO5  统计字符串中数字字符个数 count_digit              → 综合（计划自测题）
+ *
+ * ⚠️ 延后项（不在 P87–95，今日不做）：
+ *   ① 数组作函数参数的 sizeof 退化 → 属 指针章 P80–86（第 3 周）
+ *   ② gets / fgets 行输入          → 属 文件 P114–116
+ *   注：48 周计划把 ① 列在本日，但翁恺视频不在本日范围；
+ *       按"以分P标题为准"的约定移出，避免超纲。
  *
  * 收工自测（能口述）：① 为什么字符串必须以 '\0' 结尾；
- *      ② 为什么数组传参后 sizeof 得到指针大小而非数组长度；
- *      ③ scanf("%s") 读入字符串有什么风险、怎么用宽度保护。
+ *      ② scanf("%s") 读入字符串有什么风险、怎么用宽度保护；
+ *      ③ 字符串数组 char *a[] 与二维字符数组 char a[][10] 有什么不同。
  *
  * 🔧 硬件相关性：
  *   - '\0' 结尾与缓冲区边界 🟢 高相关：读串口/网络帧、定长缓冲必须边界检查，
  *     越界 = 缓冲区溢出 = 嵌入式头号崩溃/安全隐患
  *   - 定长读入 + 宽度保护 🟢 高相关：串口命令行 / AT 指令解析必踩点
+ *   - 字符串表（char *a[]）🟢 高相关：AT 指令表、菜单项、日志级别名——嵌入式常见
  *   - 字符串处理 🟡 通用素养：配置解析 / 日志
- *   - 数组退化 → 指针传参 🟢 高相关：为 第 3 周 指针日打底
  *
- * 说明：本文件顶部已提供 my_strlen / show_size / count_digit 三个工具函数
- *      （文件作用域，可直接调用）。第 2 周第 4 天（函数·上）你将从头自己写函数；
- *      今天先"调用 + 观察 + 预测"。
- *
- * ⚠️ 延后项（今日不做）：gets / fgets 属"行输入 / 文件 IO"，翁恺放在 第 114–116 讲（文件），
- *      不在本日 P87–95 范围，留到计划中文件相关 Day 再练，今日不超纲。
+ * 说明：本文件顶部已提供 my_strlen / count_digit 两个工具函数（文件作用域，可直接调用）。
+ *      第 2 周第 4 天（函数·上）你将从头自己写函数；今天先"调用 + 观察 + 预测"。
  */
 
 #include <stdio.h>
@@ -47,11 +48,6 @@ int my_strlen(const char *s) {
     int n = 0;
     while (s[n] != '\0') n++;
     return n;
-}
-
-void show_size(int arr[]) {
-    /* arr 在这里已退化成指针，sizeof(arr) 得到的是指针大小，不是数组长度 */
-    printf("inside  sizeof(arr) = %zu (degraded to pointer size)\n", sizeof(arr));
 }
 
 int count_digit(const char *s) {
@@ -77,44 +73,48 @@ int main(void)
     */
 #pragma endregion
 
-    /* ===== TODO 2：自己实现 my_strlen → P92 =====
-     * 任务：不调库，写一个遍历到 '\0' 返回长度的函数。
-     * 预测："hello" → 5；"" → 0。（本文件已提供 my_strlen，直接调用对比库 strlen）
-     */
-#pragma region TODO2 参考（展开看，写自己代码不需要）
-    /*
-    printf("my_strlen=%d  lib_strlen=%d\n", my_strlen("hello"), (int)strlen("hello"));
-    */
-#pragma endregion
-
-    /* ===== TODO 3：数组作函数参数退化（sizeof 自检，自 第 2 周第 2 天 移入） =====
-     * 任务：主函数里对一个真实数组打印 sizeof(数组)，再调用 show_size(a) 看函数内 sizeof。
-     * 预测：调用处 sizeof(a)=元素数*4（如 5*4=20）；函数内 sizeof(arr)=8（指针大小），
-     *       长度信息在传参时丢失——这正是数组传参常要再传一个长度 n 的原因。
-     */
-#pragma region TODO3 参考（展开看，写自己代码不需要）
-    /*
-    int a[5] = { 1, 2, 3, 4, 5 };
-    printf("outside sizeof(a) = %zu (real array size)\n", sizeof(a));
-    show_size(a);
-    */
-#pragma endregion
-
-    /* ===== TODO 4：字符串输入输出（P89）——scanf("%s") 的行为与宽度保护 =====
+    /* ===== TODO 2：字符串输入输出（P89）——scanf("%s") 的行为与宽度保护 =====
      * 任务：char buf[8];
      *       ① 先用 scanf("%7s", buf) 读入，输入 "hello world" —— 观察实际读到了什么？
      *       ② 再想：如果写成 scanf("%s", buf)，输入超过 7 个字符会发生什么？
      * 预测：%s / %7s 都"遇空格即停" —— "hello world" 只能得到 "hello"；
      *       %7s 最多读 7 字符 + '\0'，绝不越界；%s 无宽度保护，输入超长会越界写坏内存。
-     * 要点：宽度应写成 sizeof(buf)-1，这就是"安全差异"里 scanf 这一半。
-     *       （gets 已废弃、fgets 属文件 IO → 见文件头「延后项」，今日不练）
+     * 要点：宽度应写成 sizeof(buf)-1。
      */
-#pragma region TODO4 参考（展开看，写自己代码不需要）
+#pragma region TODO2 参考（展开看，写自己代码不需要）
     /*
     char buf[8];
     scanf("%7s", buf);          // 宽度 7 = sizeof(buf)-1：最多读 7 字符 + '\0'，安全
     printf("got: %s\n", buf);
     // 对照：scanf("%s", buf) 无宽度保护 + 遇空格即停，输入超长会越界（危险）
+    */
+#pragma endregion
+
+    /* ===== TODO 3：字符串数组 → P90 =====
+     * 任务：用两种写法存同一组字符串，遍历打印，观察写法差别：
+     *       char *a[] = { "Mon", "Tue", "Wed" };      // 指针数组：每个元素是一个指针
+     *       char b[][8] = { "Mon", "Tue", "Wed" };    // 二维字符数组：连续存放，每行 8 字节
+     * 预测：两者打印结果一样（Mon Tue Wed），但内存布局不同：
+     *       a 里每个元素是指针；b 是 3×8 的连续字节块。
+     */
+#pragma region TODO3 参考（展开看，写自己代码不需要）
+    /*
+    char *a[] = { "Mon", "Tue", "Wed" };
+    char b[][8] = { "Mon", "Tue", "Wed" };
+    for (int i = 0; i < 3; i++) printf("%s ", a[i]);
+    printf("\n");
+    for (int i = 0; i < 3; i++) printf("%s ", b[i]);
+    printf("\n");
+    */
+#pragma endregion
+
+    /* ===== TODO 4：自己实现 my_strlen → P92 =====
+     * 任务：不调库，写一个遍历到 '\0' 返回长度的函数。
+     * 预测："hello" → 5；"" → 0。（本文件已提供 my_strlen，直接调用对比库 strlen）
+     */
+#pragma region TODO4 参考（展开看，写自己代码不需要）
+    /*
+    printf("my_strlen=%d  lib_strlen=%d\n", my_strlen("hello"), (int)strlen("hello"));
     */
 #pragma endregion
 
