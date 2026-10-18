@@ -1,5 +1,5 @@
 // day03_branch.c
-// W1-D3 分支结构：if / else if / switch
+// 分支结构：if / else if / switch（第 1 周第 5–6 天）
 // 对应翁恺 V1 第 24–31 讲（做判断 if、关系运算、找零计算器、else、嵌套/级联 if-else、switch-case）
 //           + 第 64–66 讲（逻辑类型、逻辑运算、条件运算与逗号运算）
 //

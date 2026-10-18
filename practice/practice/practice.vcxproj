@@ -158,23 +158,23 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day03_branch.c">
-      <!-- 从生成中排除：W1-D4 起由 day04_loop.c 提供 main()，避免 LNK2005 多重定义 -->
+      <!-- 从生成中排除：分支日已闭环，main() 由 day04_loop.c（循环）提供，避免 LNK2005 多重定义 -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day04_loop.c">
-      <!-- 从生成中排除：W1-D5 起由 day05_array.c 提供 main()，避免 LNK2005 多重定义。D4 已闭环，练习归档 -->
+      <!-- 从生成中排除：循环日已闭环，main() 由 day05_array.c（数组）提供，避免 LNK2005 多重定义 -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day05_array.c">
-      <!-- 从生成中排除：W1-D6 起由 day06_array2.c 提供 main()，避免 LNK2005 多重定义。D5 已闭环，练习归档 -->
+      <!-- 从生成中排除：main() 由 day06_array2.c 提供，避免 LNK2005 多重定义（day05 已闭环归档） -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day06_array2.c">
-      <!-- 从生成中排除：W1-D7 起由 day07_str.c 提供 main()，避免 LNK2005 多重定义。D6 已闭环，练习归档 -->
+      <!-- 从生成中排除：main() 由 day07_str.c（第 2 周第 3 天）提供，避免 LNK2005 多重定义（day06 已闭环归档） -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day07_str.c" />
-    <!-- W1-D7 起启用（字符数组/字符串，翁恺 P87–95）；D8 开始时由 agent 排除本文件并启用下一日 .c，避免 LNK2005 多重 main -->
+    <!-- 第 2 周第 3 天 起启用（字符数组/字符串，翁恺 P87–95）；第 2 周第 4 天 开始时由 agent 排除本文件并启用下一日 .c，避免 LNK2005 多重 main -->
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
