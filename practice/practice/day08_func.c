@@ -39,6 +39,13 @@
  */
 
 #include <stdio.h>
+void print_line(void);
+int add(int, int);
+int max2(int, int);
+int is_prime(int);
+void show(int);
+int fact(int);
+int fact_iter(int);
 
 int main(void)
 {
@@ -47,7 +54,10 @@ int main(void)
      *       void print_line(void) { printf("----------\n"); }
      *       在 main 里调用两次，体会"同一段代码只写一遍"。
      * 预测：调用两次 → 打印两行分隔线，输出与重复写两遍完全一致。
-     */
+    
+    print_line();
+    print_line();
+    */
 #pragma region TODO1 参考（展开看，写自己代码不需要）
     /*
     void print_line(void) {
@@ -65,7 +75,11 @@ int main(void)
      *       int add(int a, int b)  → 返回 a+b
      *       int max2(int a, int b) → 返回较大者
      * 预测：add(3,5) → 8；max2(3,5) → 5；max2(5,3) → 5。
-     */
+
+    printf("sum is:%d\n", add(3, 5));
+    printf("max2 is:%d\n", max2(3, 5));
+    printf("max2 is:%d\n", max2(5, 3));
+    */
 #pragma region TODO2 参考（展开看，写自己代码不需要）
     /*
     int add(int a, int b) { return a + b; }
@@ -81,7 +95,17 @@ int main(void)
      *          否则 printf("x=%d\n", x)。
      * 预测：is_prime(7) → 1；is_prime(9) → 0；is_prime(1) → 0；
      *       show(-5) 只打印 "negative"，不打印 "x=..."。
-     */
+    int x = 0;
+    printf("enter the number:\n");
+    scanf("%d",&x);
+    show(x);
+    if (x >= 0) {
+        if (is_prime(x))
+            printf("%d is prime.\n", x);
+        else
+            printf("%d is not prime.\n", x);
+    }
+    */
 #pragma region TODO3 参考（展开看，写自己代码不需要）
     /*
     int is_prime(int x) {
@@ -107,6 +131,9 @@ int main(void)
      *       ② 把原型那行注释掉再编译 → 观察 MSVC 报什么错（C4013："未定义；假定返回 int"）
      * 预测：有原型 → 正常输出 5；无原型 → 编译报错/警告，提示找不到 max2 的声明。
      * 要点：原型 = 告诉编译器"这个函数长什么样"，所以定义可以放在后面、甚至放在别的 .c 文件里。
+     
+    printf("max2 is:%d\n", max2(3, 5));
+    printf("max2 is:%d\n", max2(5, 3));
      */
 #pragma region TODO4 参考（展开看，写自己代码不需要）
     /*
@@ -130,7 +157,11 @@ int main(void)
      * 预测：fact(5) → 120；fact_iter(5) → 120。
      * 思考（口述即可）：递归写着短，但每递归一层就压一帧栈；MCU 栈只有几 KB，
      *       层数一多就爆。同一个问题能写成循环就别写递归。
-     */
+     
+int x = 5;
+printf("the fact is:%d\n", fact(x));
+printf("the fact is:%d\n", fact_iter(x));
+*/
 #pragma region TODO5 参考（展开看，写自己代码不需要）
     /*
     int fact(int n) {
@@ -148,4 +179,54 @@ int main(void)
 #pragma endregion
 
     return 0;
+}
+void print_line(void) {
+    printf("------------\n");
+}
+int add(int a, int b) {
+    int sum = 0;
+    sum = a + b;
+    return sum;
+}
+int max2(int a, int b) {
+    int max = 0;
+    if (a > b)
+        max = a;
+    else if (a < b)
+        max = b;
+    else
+        max = 0;
+    return max;
+}
+int is_prime(int x) {
+    if (x < 2)
+        return 0;
+    else 
+        for (int i = 2; i < x; i++) {
+            if (x % i == 0) {
+                return 0;
+            }
+        }
+    return 1;
+}
+void show(int x) {
+    if (x < 0) {
+        printf("negative!\n");
+        return;
+    }
+    else {
+        printf("the number is:%d\n", x);
+        return;
+    }
+}
+int fact(int x) {
+    if (x <= 1)
+        return 1;
+    return x * fact(x - 1);
+}
+int fact_iter(int x) {
+    int f = 1;
+    for (int i = 1; i <= x; i++)
+        f = i * f;
+    return f;
 }
