@@ -51,6 +51,12 @@ int main(void)
     // 【任务】定义 int a=10; double b=3.14; char c='X'; 分别打印 值 + 地址。
     // 【预测】&a、&b、&c 是三个不同的十六进制地址；& 取的是变量首字节地址；
     //         相邻变量地址一般也不连续（编译器按类型对齐排布，int 4 字节对齐、double 8 字节对齐）。
+    /*int a = 10;
+    double b = 3.14;
+    char c = 'X';
+    printf("ADa=%p\n", &a);
+    printf("ADb=%p\n", &b);
+    printf("ADc=%p\n", &c);*/
 #pragma region TODO1 参考代码（解注运行）
     /* int a = 10;
      * double b = 3.14;
@@ -64,6 +70,12 @@ int main(void)
     // ===== TODO2 指针变量 + 解引用 *（P81）=====
     // 【任务】int a=10; int *p=&a; 打印 p 与 &a（应相等）、*p（应=10）；再 *p=20; 打印 a（应=20）。
     // 【预测】*p 解出来就是 a 的值；改 *p 就是改 a（p 指向 a）。
+    /*int a = 10;
+    int* p = &a;
+    printf("p=%p\n", p);
+    printf("&a=%p\n", &a);
+    *p = 20;
+    printf("a=%d\n", a);*/
 #pragma region TODO2 参考代码（解注运行）
     /* int a = 10;
      * int *p = &a;
@@ -76,6 +88,12 @@ int main(void)
     // ===== TODO3 类型决定解引用访问宽度（P81 延伸）=====
     // 【任务】定义 int *pi=0; double *pd=0; char *pc=0; 打印 sizeof(*pi)、sizeof(*pd)、sizeof(*pc)。
     // 【预测】4 / 8 / 1。含义：指针声明的类型决定"解引用时读写几个字节"。
+    int* pi = 0;
+    double* pd = 0;
+    char* pc = 0;
+    printf("sizeof(pi)=%d\n", sizeof(*pi));
+    printf("sizeof(pd)=%d\n", sizeof(*pd));
+    printf("sizeof(pc)=%d\n", sizeof(*pc));
 #pragma region TODO3 参考代码（解注运行）
     /* int *pi = 0;
      * double *pd = 0;
