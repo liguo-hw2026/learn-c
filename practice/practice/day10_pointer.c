@@ -2,10 +2,12 @@
  * day10_pointer.c - 第 3 周第 1 天 · 指针（上）：取地址 & / 指针变量 / 解引用 * / 类型决定访问宽度
  *                   （翁恺 V1 第 80–81 讲）
  *
- * 提示骨架：每题的"参考写法"用 #pragma region 折叠（见 main 内各 TODO region）。
- *   VS 折叠：Ctrl+M, Ctrl+M 折叠/展开单个；Ctrl+M, Ctrl+O 折叠全部。
- *   参考代码默认注释掉（防误编译），需要时把对应 region 里的星斜杠块解注即可运行。
- * 方法：先预测后验证（predict-then-verify）。
+ * 骨架格式约定（2026-10-23 起，以后所有骨架统一）：
+ *   - 【任务】与【预测】为普通注释，直接平铺可见，不折叠。
+ *   - 【参考代码】统一用 #pragma region … #pragma endregion 折叠存放，默认注释掉（防误编译）。
+ *     需要时把对应 region 里的星斜杠块解注即可运行。
+ *   - VS 折叠：Ctrl+M, Ctrl+M 折叠/展开单个；Ctrl+M, Ctrl+O 折叠全部。
+ *   - 方法：先预测后验证（predict-then-verify）。
  *
  * 视频（B站分P，已用 API 核实真实标题 2026-10-23）：
  *   P80 9.1.1 取地址运算：&运算符取得变量的地址
@@ -41,45 +43,46 @@
 
 int main(void)
 {
-    // day10 pointer skeleton ready; uncomment a TODO region's comment block to run it.
+    // day10 pointer skeleton ready; 参考代码见各 TODO 的 #pragma region 折叠块。
     // 默认所有练习代码注释掉，main 直接 return 0（无输出属于正常）——解注某个 region 才会打印。
     printf("day10 pointer skeleton ready; uncomment a TODO region to run\n");
 
-#pragma region TODO1 参考（取地址运算 & · P80）
-    /* 任务：定义 int a=10; double b=3.14; char c='X'; 分别打印 值 + 地址。
-     * 预测：&a、&b、&c 是三个不同的十六进制地址；& 取的是变量首字节地址。
-     * int a = 10;
+    // ===== TODO1 取地址运算 &（P80）=====
+    // 【任务】定义 int a=10; double b=3.14; char c='X'; 分别打印 值 + 地址。
+    // 【预测】&a、&b、&c 是三个不同的十六进制地址；& 取的是变量首字节地址；
+    //         相邻变量地址一般也不连续（编译器按类型对齐排布，int 4 字节对齐、double 8 字节对齐）。
+#pragma region TODO1 参考代码（解注运行）
+    /* int a = 10;
      * double b = 3.14;
      * char c = 'X';
      * printf("a=%d  &a=%p\n", a, (void*)&a);
      * printf("b=%f  &b=%p\n", b, (void*)&b);
      * printf("c=%c  &c=%p\n", c, (void*)&c);
      */
-    // predict: 三个地址互不相同；相邻变量地址一般也不连续（编译器按类型对齐排布）。
 #pragma endregion
 
-#pragma region TODO2 参考（指针变量 + 解引用 * · P81）
-    /* 任务：int a=10; int *p=&a; 打印 p 与 &a（应相等）、*p（应=10）；再 *p=20; 打印 a（应=20）。
-     * 预测：*p 解出来就是 a 的值；改 *p 就是改 a（p 指向 a）。
-     * int a = 10;
+    // ===== TODO2 指针变量 + 解引用 *（P81）=====
+    // 【任务】int a=10; int *p=&a; 打印 p 与 &a（应相等）、*p（应=10）；再 *p=20; 打印 a（应=20）。
+    // 【预测】*p 解出来就是 a 的值；改 *p 就是改 a（p 指向 a）。
+#pragma region TODO2 参考代码（解注运行）
+    /* int a = 10;
      * int *p = &a;
      * printf("p=%p  &a=%p  *p=%d\n", (void*)p, (void*)&a, *p);
      * *p = 20;
      * printf("after *p=20, a=%d\n", a);   // 预测 20
      */
-    // predict: p 里存的是 a 的地址；*p 是"去那个地址把值取出来"；*p=20 直接改了 a。
 #pragma endregion
 
-#pragma region TODO3 参考（类型决定解引用访问宽度 · P81 延伸）
-    /* 任务：定义 int *pi=0; double *pd=0; char *pc=0; 打印 sizeof(*pi)、sizeof(*pd)、sizeof(*pc)。
-     * 预测：4 / 8 / 1。含义：指针声明的类型决定"解引用时读写几个字节"。
-     * int *pi = 0;
+    // ===== TODO3 类型决定解引用访问宽度（P81 延伸）=====
+    // 【任务】定义 int *pi=0; double *pd=0; char *pc=0; 打印 sizeof(*pi)、sizeof(*pd)、sizeof(*pc)。
+    // 【预测】4 / 8 / 1。含义：指针声明的类型决定"解引用时读写几个字节"。
+#pragma region TODO3 参考代码（解注运行）
+    /* int *pi = 0;
      * double *pd = 0;
      * char *pc = 0;
      * printf("sizeof(*pi)=%zu  sizeof(*pd)=%zu  sizeof(*pc)=%zu\n",
      *        sizeof(*pi), sizeof(*pd), sizeof(*pc));
      */
-    // predict: 宽度由所指类型决定，与指针变量自身大小（32位4 / 64位8）无关。
 #pragma endregion
 
     return 0;
