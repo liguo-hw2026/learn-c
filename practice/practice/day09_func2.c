@@ -46,40 +46,40 @@
 void swap(int, int);
 void foo(void);
 
-int main(void)
-{
-    /* ===== TODO 1：参数传递（值传递）→ P71 =====
-     * 任务：先看 swap 的定义（文件尾）。在 main 里调用 swap(x, y)，
-     *      观察调用前后 x、y 是否真的被交换。
-     * 预测：swap 之后，x 仍是 3、y 仍是 5 —— 没交换。
-     *       原因：C 是传值调用，swap 拿到的是 x、y 的"副本"，
-     *       它交换的是副本，main 里的原变量纹丝不动。
-    int x = 3, y = 5;
-    swap(x, y);
-    printf("after swap: x=%d y=%d\n", x, y);   // 预测 x=3 y=5
-    */
-
-    /* ===== TODO 2：本地变量（作用域 + 生命周期）→ P72 =====
-     * 任务：看 foo 的定义（文件尾，里面有自己的本地变量 x）。
-     *      在 main 里也定义一个 x=99，先调一次 foo，再打印 main 的 x，再调一次 foo。
-     * 预测：main 的 x 始终是 99（和 foo 的 x 互不干扰）；
-     *       foo 每调用一次都从 10 重新开始 → 两次都打印 11（不是 12，说明不累积）。
-    int x = 99;
-    foo();
-    printf("main x=%d\n", x);   // 预测 99
-    foo();                      // 预测再次 11
-    */
-
-    /* ===== TODO 4：头文件保护（多文件）→ P73 / D1 =====
-     * 任务：square 的声明在 mymath.h、实现在 mymath.c（已随工程链接）。
-     *       这里直接调用它，体会"声明放 .h、实现放 .c"。
-     * 预测：square(6) = 36
-    printf("square(6) = %d\n", square(6));
-    */
-    return 0;
-}
+//int main(void)
+//{
+//    /* ===== TODO 1：参数传递（值传递）→ P71 =====
+//     * 任务：先看 swap 的定义（文件尾）。在 main 里调用 swap(x, y)，
+//     *      观察调用前后 x、y 是否真的被交换。
+//     * 预测：swap 之后，x 仍是 3、y 仍是 5 —— 没交换。
+//     *       原因：C 是传值调用，swap 拿到的是 x、y 的"副本"，
+//     *       它交换的是副本，main 里的原变量纹丝不动。
+//     
+//    int x = 3, y = 5;
+//    swap(x, y);
+//    printf("after swap: x=%d y=%d\n", x, y);   // 预测 x=3 y=5
+//    */
+//    /* ===== TODO 2：本地变量（作用域 + 生命周期）→ P72 =====
+//     * 任务：看 foo 的定义（文件尾，里面有自己的本地变量 x）。
+//     *      在 main 里也定义一个 x=99，先调一次 foo，再打印 main 的 x，再调一次 foo。
+//     * 预测：main 的 x 始终是 99（和 foo 的 x 互不干扰）；
+//     *       foo 每调用一次都从 10 重新开始 → 两次都打印 11（不是 12，说明不累积）。
+//     
+//    int x = 99;
+//    foo();
+//    printf("main x=%d\n", x);   // 预测 99
+//    foo();                      // 预测再次 11
+//    */
+//    /* ===== TODO 4：头文件保护（多文件）→ P73 / D1 =====
+//     * 任务：square 的声明在 mymath.h、实现在 mymath.c（已随工程链接）。
+//     *       这里直接调用它，体会"声明放 .h、实现放 .c"。
+//     * 预测：square(6) = 36
+//    printf("square(6) = %d\n", square(6));
+//    */
+//    return 0;
+//}
 #pragma region TODO3 参考（main 换签名：argc/argv - 展开看，写自己代码不需要）
-    /*
+    
     // ⚠️ 做 TODO3 时：把上面的 int main(void){...} 整段注释掉，
     //    换成下面这个带参数的 main，再编译运行。
     int main(int argc, char *argv[])
@@ -95,7 +95,7 @@ int main(void)
     }
     // 怎么传参运行：VS 里 右键项目 → 属性 → 配置属性 → 调试 → 命令参数，填 `hello world`
     // 预测：argc=3, argv[0]=程序名, argv[1]="hello", argv[2]="world"
-    */
+ 
 #pragma endregion
 
 // ---- 以下为各 TODO 的函数定义（全部激活，main 里解注调用即可测试）----

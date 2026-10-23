@@ -181,7 +181,13 @@
       <!-- 从生成中排除：main() 由 day09_func2.c（第 2 周第 5 天）提供，避免 LNK2005 多重定义（day08 已闭环归档） -->
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="day09_func2.c" />
+    <ClCompile Include="day09_func2.c">
+      <!-- 从生成中排除：main() 由 day10_pointer.c（第 3 周第 1 天）提供，避免 LNK2005 多重定义（day09 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day10_pointer.c">
+      <!-- main() 由本文件提供（第 3 周第 1 天 · 指针章 P80-P81） -->
+    </ClCompile>
     <!-- 第 2 周第 5 天 起启用（函数·下，翁恺 P71–73：参数传递/本地变量/函数庶事·main/头文件保护） -->
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->
