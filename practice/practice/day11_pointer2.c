@@ -39,13 +39,17 @@ int main(void)
 {
     // day11 pointer(下) skeleton ready; 参考代码见各 TODO 的 #pragma region 折叠块。
     // 默认所有练习代码注释掉，main 直接 return 0（无输出属于正常）——解注某个 region 才会打印。
-    printf("day11 pointer(下) skeleton ready; uncomment a TODO region to run\n");
+    /*printf("day11 pointer(下) skeleton ready; uncomment a TODO region to run\n");*/
 
     // ===== TODO1 声明读法 + * 双重含义（P82）=====
     // 【任务】写 int* p, q; 然后分别打印 (void*)&p 和 (void*)&q，预测 q 的类型。
     // 【预测】int* p, q; 中只有 p 是“指向 int 的指针”，q 是普通 int（逗号分隔的声明，* 只绑定 p）。
     //         验证：sizeof(p) 应为 8（指针），sizeof(q) 应为 4（int）。
     // 【参考代码】见 region（解注运行）。
+   /* int* p, q;
+    printf("p=%p\n", p);
+    printf("ADp=%p,ADq=%p\n", (void*)&p, (void*)&q);
+    printf("sizeof(p)=%zu,sizeof(q)=%zu\n", sizeof(p), sizeof(q));*/
 #pragma region TODO1 参考代码（解注运行）
     /* int* p, q;
      * printf("sizeof(p)=%zu (指针)  sizeof(q)=%zu (int)\n", sizeof(p), sizeof(q));
@@ -61,6 +65,13 @@ int main(void)
     // 【任务】演示未初始化指针的危害，并练习 NULL 初值 + 用前判空。
     // 【预测】int *bad; 未初始化时它等于一个随机地址；解引用 *bad 行为未定义（可能崩）。
     //         把 bad 初始化为 NULL，再用 if (bad != NULL) 保护，就安全。
+    //int* bad=NULL;
+    //int a = 10;
+    //printf("ADa=%p\n", (void*)&a);//a的地址
+    //bad = &a;
+    //if(bad!=NULL)
+    //    *bad = 12;//给a赋值
+    //printf("ADa=%p,bad=%p\n", (void*)&a, (void*)bad);//打印a的地址，预测不会变，打印地址bad，和a一样
 #pragma region TODO2 参考代码（解注运行）
     /* int *bad;               // 未初始化 = 野指针（指向随机地址）
      * // *bad = 10;          // 危险！写到一个随机地址，可能崩或改坏别的数据——先注释别跑
@@ -81,17 +92,30 @@ int main(void)
     // 【预测】三者相等，都等于 8（64 位平台）；指针大小与“指向谁”无关，只与平台地址总线宽度有关。
     //         （回忆 day10：地址纸条固定 8 字节——今天收尾它。）
 #pragma region TODO3 参考代码（解注运行）
-    /* printf("sizeof(int*)=%zu\n", sizeof(int*));
-     * printf("sizeof(char*)=%zu\n", sizeof(char*));
-     * printf("sizeof(double*)=%zu\n", sizeof(double*));
-     * // 预测三者都是 8；硬件提醒：32 位 MCU 上会是 4
-     */
+    // printf("sizeof(int*)=%zu\n", sizeof(int*));//int型的地址是8字节
+    // printf("sizeof(char*)=%zu\n", sizeof(char*));//char型的地址也是8字节
+    // printf("sizeof(double*)=%zu\n", sizeof(double*));//double型的地址也是8字节
+    // //不管哪种类型地址在64位编译器上统一都是8字节 8*8=64位
+    //// 预测三者都是 8；硬件提醒：32 位 MCU 上会是 4 
+    // 
 #pragma endregion
 
     // ===== TODO4 p+1 差值 recap 自测（P82 延伸；完整规则归 P85）=====
     // 【任务】重跑 day10 的 int/double/char* 的 p+1 地址差值实验，凭直觉解释“为什么 int+1 跨 4、double+1 跨 8”。
     // 【预测】差值 = sizeof(所指类型)：int→4、double→8、char→1。类型的“房间数”决定了步长。
     //         注：p+1 的完整运算规则（p+i、p-q、比较、数组名是常量指针）属 P85，第 3 周第 4 天系统讲，今天只需直觉。
+    int* pi = NULL,a=1;
+    double* pd = NULL,b=2.0;
+    char* pc = NULL,c='3';
+    pi = &a;
+    pd = &b;
+    pc = &c;
+    if(pi!=0)
+        printf("pi=%p,pi+1=%p\n", (void*)pi, (void*)(pi + 1));
+    if(pd!=0)
+        printf("pd=%p,pd+1=%p\n", (void*)pd, (void*)(pd + 1));
+    if(pc!=0)
+        printf("pc=%p,pc+1=%p\n", (void*)pc, (void*)(pc + 1));
 #pragma region TODO4 参考代码（解注运行）
     /* int i = 0; double d = 0; char c = 0;
      * int *pi = &i; double *pd = &d; char *pc = &c;
