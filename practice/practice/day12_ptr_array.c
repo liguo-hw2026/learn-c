@@ -42,19 +42,22 @@
 // 平时不调用它不产生任何输出；解注 TODO2 的 region 后它才会被调用。
 void print_array_size(int a[])
 {
-    printf("函数内 sizeof(a)=%zu\n", sizeof(a));   // 预测：8（退化成指针），不是 20
+    printf("in function sizeof(a)=%zu\n", sizeof(a));   // 预测：8（退化成指针），不是 20
 }
 
 int main(void)
 {
-    printf("day12 ptr_array skeleton ready; uncomment a TODO region to run\n");
+    //printf("day12 ptr_array skeleton ready; uncomment a TODO region to run\n");
 
     // ===== TODO1 数组名 = 首元素地址；a[i] 等价 *(a+i)（P83）=====
     // 【任务】定义 int a[5]={10,20,30,40,50}; 打印 a、&a[0]、*a，再对比 a[2] 与 *(a+2)。
     // 【预测】a 与 &a[0] 是同一个地址（数组名就是首元素地址）；*a = 10；
     //         a[2] 与 *(a+2) 都等于 30 —— a[i] 和 *(a+i) 是同一件事的两种写法。
     // 【参考代码】见 region（解注运行）。
-#pragma region TODO1 参考代码（解注运行）
+    /*int a[5] = { 10,20,30,40,50 };
+    printf("a=%p,&a[0]=%p,*a=%d\n",a, &a[0], *a);
+    printf("a[2]=%d,*(a+2)=%d\n", a[2], *(a + 2));
+#pragma region TODO1 参考代码（解注运行）*/
     /* int a[5] = {10, 20, 30, 40, 50};
      * printf("a     = %p\n", (void*)a);
      * printf("&a[0] = %p\n", (void*)&a[0]);   // 预测：与 a 完全相同
@@ -67,6 +70,10 @@ int main(void)
     // 【任务】main 里打印 sizeof(a)（整个数组的字节数），再调用 print_array_size(a) 看函数内结果。
     // 【预测】main 里 = 20（5 个 int，每个 4 字节）；函数内 = 8 —— 传进函数的其实只是指针！
     // 【参考代码】见 region（解注运行）。
+  /*  int a[5] = { 10,20,30,40,50 };
+    printf("sizeof(a)=%zu\n", sizeof(a));
+    print_array_size(a);*/
+
 #pragma region TODO2 参考代码（解注运行）
     /* int a[5] = {10, 20, 30, 40, 50};
      * printf("main 里 sizeof(a) = %zu\n", sizeof(a));   // 预测：20
@@ -80,6 +87,15 @@ int main(void)
     // 【任务】用「下标法」和「指针法」各遍历一遍 a，对比两行输出是否一致。
     // 【预测】两行完全一致；p 每自增一次跨一个元素（凭 day10/11 的 p+1 直觉，完整规则归 P85）。
     // 【参考代码】见 region（解注运行）。
+   /* int a[5] = { 10,20,30,40,50 };
+    for (int i = 0; i < 5; i++) {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+    for (int i = 0; i < 5; i++) {
+        printf("%d ", *(a+i));
+    }
+    printf("\n");*/
 #pragma region TODO3 参考代码（解注运行）
     /* int a[5] = {10, 20, 30, 40, 50};
      * int i;
@@ -97,20 +113,21 @@ int main(void)
     // 【预测】const int* p1：*p1 = 99 报错（所指不可改），p1 = &j 没问题（可换指向）；
     //         int* const p2：p2 = &j 报错（p2 本身不可改），*p2 = 88 没问题（所指可改）。
     // 【参考代码】见 region（解注运行）。
+   
 #pragma region TODO4 参考代码（解注运行）
-    /* int i = 10;
-     * int j = 20;
-     * const int *p1 = &i;      // 读法：p1 指向「const int」—— 不许通过 p1 改 i 的值
-     * // *p1 = 99;            // 编译错：向只读位置赋值（所指不可改）
-     * p1 = &j;                 // 没问题：p1 本身可以换指向
-     * int *const p2 = &i;      // 读法：p2 是 const 指针 —— p2 本身不许改
-     * *p2 = 88;                // 没问题：i 的值可以改（此后 i = 88）
-     * // p2 = &j;             // 编译错：向只读变量 p2 赋值（不能换指向）
-     * const int *const p3 = &i;   // 双重 const：改哪个都不行
-     * // *p3 = 77;            // 编译错
-     * // p3 = &j;             // 编译错
-     * printf("*p1=%d  *p2=%d  i=%d\n", *p1, *p2, i);   // 预测：20 88 88
-     */
+     int i = 10;
+     int j = 20;
+     const int *p1 = &i;      // 读法：p1 指向「const int」—— 不许通过 p1 改 i 的值
+     // *p1 = 99;            // 编译错：向只读位置赋值（所指不可改）
+     p1 = &j;                 // 没问题：p1 本身可以换指向
+     int *const p2 = &i;      // 读法：p2 是 const 指针 —— p2 本身不许改
+     *p2 = 88;                // 没问题：i 的值可以改（此后 i = 88）
+      //p2 = &j;             // 编译错：向只读变量 p2 赋值（不能换指向）
+     const int *const p3 = &i;   // 双重 const：改哪个都不行
+      //*p3 = 77;            // 编译错
+      //p3 = &j;             // 编译错
+     printf("*p1=%d  *p2=%d  i=%d\n", *p1, *p2, i);   // 预测：20 88 88
+     
 #pragma endregion
 
     return 0;

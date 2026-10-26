@@ -194,7 +194,11 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day12_ptr_array.c">
-      <!-- main() 由本文件提供（第 3 周第 3 天 · 指针与数组 P83 / 指针与 const P84） -->
+      <!-- 从生成中排除：main() 由 day13_ptr_ops.c（第 3 周第 4 天）提供，避免 LNK2005 多重定义（day12 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day13_ptr_ops.c">
+      <!-- main() 由本文件提供（第 3 周第 4 天 · 指针运算 P85） -->
     </ClCompile>
     <!-- 第 2 周第 5 天 起启用（函数·下，翁恺 P71–73：参数传递/本地变量/函数庶事·main/头文件保护） -->
     <ClCompile Include="mymath.c" />
