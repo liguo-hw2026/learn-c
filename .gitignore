@@ -1,5 +1,6 @@
 # Visual Studio 缓存与用户设置
 .vs/
+*.vcxproj.user
 
 # 编译输出目录
 Debug/
