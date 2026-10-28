@@ -45,6 +45,12 @@ int main(void)
     // 【任务】定义 int a[3]、double d[3]、char c[3]，用 (char*) 强转测出相邻元素的字节差。
     // 【预测】int 差 4、double 差 8、char 差 1 —— p+1 加的是「1 个元素」，宽度由类型定。
     // 【参考代码】见 region（解注运行）。
+   /* int a[3] = { 1,2,3 };
+    double d[3] = { 1,2,3 };
+    char c[3] = { 1,2,3 };
+    printf("int step=%d\n", (char*)(a + 1) - (char* )(a));
+    printf("double step=%d\n", (char*)(d + 1) - (char*)(d));
+    printf("char step=%d\n", (a + 1) - a);*/
 #pragma region TODO1 参考代码（解注运行）
     /* int a[3] = {0};
      * double d[3] = {0};
@@ -61,6 +67,14 @@ int main(void)
     // 【预测】x = 10 且 p 后移到 a[1]（++ 作用在 p 上：先取 *p，p 再自增）；
     //         y = 10（旧值）且 a[0] 变 11、p 不动（++ 作用在 *p 上）。
     // 【参考代码】见 region（解注运行）。
+    //int a[2] = { 10,20 };
+    //int x = 0;
+    //int* p = a;
+    //x = *p++;
+    //printf("x=%d,*p=%d\n", x, *p);
+    //p--;
+    //int y = (*p)++;
+    //printf("y=%d,a[0]=%d,*p=%d\n", y, a[0], *p);
 #pragma region TODO2 参考代码（解注运行）
     /* int a[2] = {10, 20};
      * int *p = a;
@@ -77,6 +91,11 @@ int main(void)
     // 【任务】int a[5]，p 指向 a[4]、q 指向 a[1]，打印 p-q；再用 (char*) 算字节差对比。
     // 【预测】p-q = 3（元素个数）；字节差 = 12 —— 想要字节得自己乘 sizeof(int) 或强转 char*。
     // 【参考代码】见 region（解注运行）。
+   /* int a[5] = { 1,2,3,4,5 };
+    int* p = &a[4];
+    int* q = &a[1];
+    printf("p-q steps=%td\n", p - q);
+    printf("p-q=%zu\n", sizeof(int) * (p - q));*/
 #pragma region TODO3 参考代码（解注运行）
     /* int a[5] = {0, 1, 2, 3, 4};
      * int *p = &a[4];
@@ -91,6 +110,11 @@ int main(void)
     // 【任务】p++ 先跑通打印 *p；再把标「编译错」的 a++ 解注，看报什么错，然后注释回去。
     // 【预测】p++ 没问题，*p 打 2；a++ 编译错 —— 数组名是「常量指针」，不能改指向。
     // 【参考代码】见 region（解注运行）。
+    int a[2] = { 1,2 };
+    int* p = a;
+    p++;
+    printf("*p=%d\n", *p);
+ /*   a++;*/
 #pragma region TODO4 参考代码（解注运行）
     /* int a[2] = {1, 2};
      * int *p = a;

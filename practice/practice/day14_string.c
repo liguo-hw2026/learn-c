@@ -46,6 +46,14 @@ int main(void)
     // 【预测】sizeof(s)=6（5 个可见字符 + 1 个 '\0'）；循环只打出 h e l l o 共 5 个就停；
     //        逻辑长度=5，比 sizeof 少 1 是因为字符串多存了一个结束符。
     // 【参考代码】见下方 region（解注运行）。
+    //char s[] = "hello";
+    //char* p = s;
+    //while (*p != '\0') {
+    //    printf("%s", s);
+    //    p++;
+    //}
+    //printf("\n");
+    //printf("size=%zu\n", sizeof(s));
 #pragma region TODO1 参考代码（解注运行）
     /* char s[] = "hello";
      * int len = 0;
@@ -61,6 +69,12 @@ int main(void)
     // 【预测】a[0]='H' 合法，a 变成 "Hello"；p[0]='H' 行为未定义——很多系统运行时崩溃
     //        （写入只读区），代码能编过但一运行就挂。这正是"别往常量区写"的活教材。
     // 【参考代码】见下方 region（p 那行先注释着试，避免真崩）。
+    /*char a[] = "hello";
+    char* p = "hello";
+    a[0] = 'H';
+    p[0] = 'H';
+    printf("a=%s\n", a);
+    printf("p=%s\n", p);*/
 #pragma region TODO2 参考代码（解注运行）
     /* char a[] = "hello";
      * a[0] = 'H';
@@ -79,6 +93,9 @@ int main(void)
     // 【预测】%s 遇空格或回车停止；%7s 最多读 7 个字符再补 '\0'（恰好占满 buf[8]），绝不越界；
     //        无宽度限制的 %s 输入过长会缓冲区溢出（经典漏洞）。
     // 【参考代码】见下方 region。
+    //char buf[8];
+    //scanf("%7s", buf);
+    //printf("%s", buf);
 #pragma region TODO3 参考代码（解注运行）
     /* char buf[8];
      * printf("enter word: ");
@@ -94,17 +111,37 @@ int main(void)
     //   ① 打印第 5 个月；② 用循环打印全部 12 个；③ 找出并打印"最长"的那个月份名及其长度。
     // 【预测】months[4] = "May"；循环打出 12 个；最长的是 "September"（9 字符，按你实际数组定）。
     // 【参考代码】见下方 region。
+   /* const char* months[] = { "January","February","March","April","May","June","July",
+                           "August","September","October","November","December" };
+    printf("fifth month=%s\n",months[4]);
+    int length = 0;
+    int countl= 0;
+    int max = 0;
+    for (int i = 0,j=0; i < 12; i++) {
+        printf("%dmonth is :%s\n", i+1, months[i]);
+        j = 0;
+        while (months[i][j] != '\0') {
+            countl++;
+            j++;
+        }
+        if (countl > length) {
+            length = countl;
+            max = i;
+        }
+        countl = 0;
+    }
+    printf("the longest month is:%s,the length is %d\n", months[max], length);*/
 #pragma region TODO4 参考代码（解注运行）
-    /* const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
-     * printf("month[4] = %s\n", months[4]);
-     * int maxlen = 0; const char *longest = months[0];
-     * for (int i = 0; i < 12; i++) {
-     *     int l = 0; while (months[i][l] != '\0') l++;
-     *     printf("%s\n", months[i]);
-     *     if (l > maxlen) { maxlen = l; longest = months[i]; }
-     * }
-     * printf("longest = %s (%d)\n", longest, maxlen);
-     */
+   /*  const char *months[] = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+     printf("month[4] = %s\n", months[4]);
+     int maxlen = 0; const char *longest = months[0];
+      for (int i = 0; i < 12; i++) {
+         int l = 0; while (months[i][l] != '\0') l++;
+         printf("%s\n", months[i]);
+          if (l > maxlen) { maxlen = l; longest = months[i]; }
+      }
+      printf("longest = %s (%d)\n", longest, maxlen);*/
+     
 #pragma endregion
 
     // ===== TODO5 单字符输入输出：getchar/putchar（返回 int）（P91）=====
@@ -115,6 +152,15 @@ int main(void)
     // 【参考代码】见下方 region。
     // ⚠️ 小坑：若前面用过 scanf 读字符串，输入缓冲里可能残留 '\n'，会让 getchar 一上来就吃到回车。
     //    想干净验证本 TODO，可把前面 TODO 的解注代码先注释掉，单独跑这一块。
+int c = 0;
+int n = 0;
+printf("enter:");
+while ((c = getchar()) != EOF && c != '\n') {
+    putchar(c);
+    n++;
+}
+printf("\n");
+printf("%d chars\n", n);
 #pragma region TODO5 参考代码（解注运行）
     /* int c; int n = 0;
      * printf("type something: ");

@@ -40,6 +40,12 @@
 #include <stdio.h>
 #include <string.h>   /* 仅作对照：跑通自己的实现后，可与库函数结果比对 */
 
+int my_strlen(char*);
+char* my_strcpy(char* dst, const char* src,int len);
+char* my_strcat(char* dst, const char* src);
+int my_strcmp(const char* a, const char* b);
+const char* my_strstr(const char* hay, const char* needle);
+
 int main(void)
 {
     // ===== TODO1 my_strlen：自己实现，不依赖库（P92）=====
@@ -47,6 +53,10 @@ int main(void)
     //   提示：从 s[0] 开始数，遇到 '\0' 停止；用循环，不要调用库 strlen。
     //   验证：用 "hello"（应得 5）和 ""（空串，应得 0）各测一次，与库函数对比。
     // 【预测】my_strlen("hello") = 5；my_strlen("") = 0；与 strlen() 结果一致。
+   /* char* pa = "hello";
+    char* pb = "";
+    printf("the string length is:%d\n", my_strlen(pa));
+    printf("the string length is:%d\n", my_strlen(pb));*/
     // 【参考代码】见下方 region（解注运行）。
 #pragma region TODO1 参考代码（解注运行）
     /* size_t my_strlen(const char *s) {
@@ -69,6 +79,12 @@ int main(void)
     //   ③ 进阶：写一版 my_strncpy(dst, src, n) 限制最多拷 n 个（嵌入式更安全，留作延伸也可）。
     // 【预测】拷完后 dst == "Hello"；若 dst 太小，多余字符会写穿 dst 旁边的内存（缓冲区溢出）。
     // 【参考代码】见下方 region（解注运行）。
+ /*   char dst[8] = { 0 };
+    char* src2 = "123456789";
+    char* src1= "hello";
+    int n = 8;
+    printf("dst1=%s\n", my_strcpy(dst, src1,n));
+    printf("dst2=%s\n", my_strcpy(dst, src2,n));*/
 #pragma region TODO2 参考代码（解注运行）
     /* char *my_strcpy(char *dst, const char *src) {
      *     int i = 0;
@@ -92,6 +108,9 @@ int main(void)
     //   风险：接完后总长在不在 dst 容量内？溢出同样会写穿内存。
     // 【预测】接完 dst == "abcdef"；关键在"先定位 dst 原 '\0' 再覆盖它"，否则会丢字符或重复。
     // 【参考代码】见下方 region（解注运行）。
+   /* char* dst = "abc";
+    char* src = "def";
+    printf("dst=%s\n", my_strcat(dst, src));*///dst的容量用指针定义时在abc后+1位，在执行my_strcat时这个一位'\0'被替换，不存在超出容量的问题，但用数组没有验证过，是否超出数组原有容量会写穿
 #pragma region TODO3 参考代码（解注运行）
     /* char *my_strcat(char *dst, const char *src) {
      *     int i = 0, j = 0;
@@ -116,6 +135,11 @@ int main(void)
     //   ⚠️ 为什么字符串不能用 `a == b` 比较？== 比的是"两个指针地址"不是"内容"。
     // 【预测】my_strcmp("abc","abd") < 0；my_strcmp("abc","abc") == 0；与 strcmp() 一致。
     // 【参考代码】见下方 region（解注运行）。
+   /* char* a = "abc";
+    char* b = "abd";
+    char* c = "abc";
+    printf("%d\n", my_strcmp(a, b));
+    printf("%d\n", my_strcmp(a, c));*/
 #pragma region TODO4 参考代码（解注运行）
     /* int my_strcmp(const char *a, const char *b) {
      *     int i = 0;
@@ -140,6 +164,11 @@ int main(void)
     // 【预测】my_strstr("hello world","world") != NULL 且从该位置打印得 "world"；
     //        my_strstr("hello world","xyz") == NULL。
     // 【参考代码】见下方 region（解注运行）。
+char* s = "hello world";
+char* a = "world";
+char* b = "xyz";
+printf("%s\n", my_strstr(s,a));
+printf("%s\n", my_strstr(s, b));
 #pragma region TODO5 参考代码（解注运行）
     /* const char *my_strstr(const char *hay, const char *needle) {
      *     if (needle[0] == '\0') return hay;
@@ -160,4 +189,69 @@ int main(void)
 #pragma endregion
 
     return 0;
+}
+int my_strlen(char*s) {
+    int count = 0;
+    while (*s != '\0') {
+        count++;
+        s++;
+    }
+    return count;
+}
+char* my_strcpy(char* dst, const char* src,int len) {
+    char* rp = dst;
+    int count = 0;
+    while (*src != '\0') {
+        *dst = *src;
+        src++;
+        dst++;
+        count++;
+        if (count == len - 1) {
+            printf("too long!\n");
+            break;
+        }
+    }
+    *dst = '\0';
+    return rp;
+}
+char* my_strcat(char* dst, const char* src) {
+    char* rp = dst;
+    while (*dst != '\0')
+        dst++;
+    while (*src != '\0') {
+        *dst = *src;
+        dst++;
+        src++;
+    }
+    *dst = '\0';
+    return rp;
+}
+int my_strcmp(const char* a, const char* b) {
+    while (*a == *b&&*a!='\0') {
+        a++;
+        b++;
+    }
+    if(*a != *b)
+        return *a - *b;
+    return 0;
+}
+const char* my_strstr(const char* hay, const char* needle) {
+    char* rp = hay;
+    while (*hay!='\0') {
+        if (*hay == *needle) {
+            rp = hay;
+            while (*needle != '\0') {
+                if (*hay != *needle) {
+                    printf("not found!\n");
+                    return NULL;
+                }
+                hay++;
+                needle++;
+            }
+            return rp;
+        }
+        hay++;
+    }
+    printf("not found!\n");
+    return NULL;
 }
