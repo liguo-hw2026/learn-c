@@ -61,6 +61,29 @@ int main(void)
     // 【预测】扩容后前 4 个是 0 1 2 3、后 4 个是你填的新值；free 正常不崩。
     //   另观察：realloc 前后 p 的地址"可能变也可能不变"——多数情况会搬（地址变），少数原地扩（不变）。
     // 【参考代码】见下方 region（解注运行）。
+    //int n = 4;
+    //int *a= (int*)malloc(n * sizeof(int));
+    //if (a == NULL)
+    //    printf("malloc failed!\n");
+    //else {
+    //    for (int i = 0; i < n; i++)
+    //        a[i] = i;
+    //    for (int i = 0; i < n; i++)
+    //        printf("p[%d]=%d ", i, a[i]);
+    //    printf("\n");
+    //}
+    //int* t = (int*)realloc(a, 2 * n * sizeof(int));   // ⚠️ realloc 第二参是字节数，必须乘 sizeof(int)（或用 sizeof(*a)）
+    //if (t == NULL)
+    //    printf("realloc failed!\n");
+    //else {
+    //    a = t;
+    //    for (int i = 0; i < 2*n; i++)
+    //        a[i] = i;
+    //    for (int i = 0; i < 2*n; i++)
+    //        printf("p[%d]=%d ", i, a[i]);
+    //    printf("\n");
+    //}
+    //free(a);
 #pragma region TODO1 参考代码（解注运行）
     /* int main(void) {
      *     int n = 4;
@@ -95,6 +118,20 @@ int main(void)
     // 【预测】free 后写 p[0]=1（不置 NULL）→ 未定义行为，可能崩，也可能看似正常但破坏了堆；
     //        free 后 p=NULL，判空分支不执行写入，程序安全。
     // 【参考代码】见下方 region（解注运行）。
+   // int* a = (int*)malloc(4*sizeof(int));
+   // if (a == NULL)
+   //     printf("malloc failed!\n");
+   // else
+   //     for (int i = 0; i < 4; i++)
+   //                 a[i] = i;
+   //             for (int i = 0; i < 4; i++)
+   //                 printf("a[%d]=%d ", i, a[i]);
+   // free(a);
+   // printf("\n");
+   ///* for (int i = 0; i < 4; i++)
+   //     a[i] = i;*///测试可以写 没崩 但可能改了堆中其他数据
+   // for (int i = 0; i < 4; i++)
+   //     printf("a[%d]=%d ", i, a[i]);//测试释放后直接读 是不可预知的值
 #pragma region TODO2 参考代码（解注运行）
     /* int main(void) {
      *     int *p = (int*)malloc(sizeof(int));
@@ -118,6 +155,19 @@ int main(void)
     //   验证：连续 free 两次裸指针 → 程序异常；free 后都置 NULL → 第二次 free(NULL) 安全通过。
     // 【预测】连续两次 free(p) → 大概率崩溃（堆损坏）；free 后都置 NULL，第二次 free(NULL) 安全。
     // 【参考代码】见下方 region（解注运行）。
+//int* a = (int*)malloc(4 * sizeof(int));
+// if (a == NULL)
+//     printf("malloc failed!\n");
+// else
+//     for (int i = 0; i < 4; i++)
+//                 a[i] = i;
+//             for (int i = 0; i < 4; i++)
+//                 printf("a[%d]=%d ", i, a[i]);
+// free(a);
+// //free(a);//提示使用未初始化的内存“a”
+// a = NULL;
+// free(a);//a=NULL后 正常跑通
+
 #pragma region TODO3 参考代码（解注运行）
     /* int main(void) {
      *     int *p = (int*)malloc(sizeof(int));
@@ -141,6 +191,15 @@ int main(void)
     //   验证：只改声明类型时，(b) 编译运行都正确；(a) 若漏改 sizeof(int) 会尺寸算错。
     // 【预测】(b) sizeof(*p) 更安全：类型改一处即全局正确；(a) 易漏改导致分配尺寸错误。
     // 【参考代码】见下方 region（解注运行）。
+//int n = 4;
+//int* a= malloc(n * sizeof(int));
+//double* b= malloc(n * sizeof(*b));
+//if (a == NULL || b == NULL)
+//printf("malloc failed!\n");
+//else
+//printf("a=%zu,b=%zu\n", sizeof(*a), sizeof(*b));
+//free(a);
+//free(b);
 #pragma region TODO4 参考代码（解注运行）
     /* int main(void) {
      *     int n = 3;
@@ -164,6 +223,35 @@ int main(void)
     //   提示：realloc 内部已管好旧块，你最终只需 free 最终那个指针一次；计数器只数你自己的 malloc 与最终 free。
     // 【预测】打印出 0..2n-1；cnt_malloc == cnt_free，差值为 0，无泄漏。
     // 【参考代码】见下方 region（解注运行）。
+int n = 4;
+int cntm = 0;
+int cntf = 0;
+int* a = (int*)malloc(n * sizeof(int)); cntm++;
+if (a == NULL)
+    printf("malloc failed!\n");
+else {
+    for (int i = 0; i < n; i++)
+        a[i] = i;
+    for (int i = 0; i < n; i++)
+        printf("p[%d]=%d ", i, a[i]);
+    printf("\n");
+}
+int* t = (int*)realloc(a, 2 * n * sizeof(int));   // ⚠️ realloc 第二参是字节数，必须乘 sizeof(int)（或用 sizeof(*a)）
+if (t == NULL)
+    printf("realloc failed!\n");
+else {
+    a = t;
+    for (int i = 0; i < 2*n; i++)
+        a[i] = i;
+    for (int i = 0; i < 2*n; i++)
+        printf("p[%d]=%d ", i, a[i]);
+    printf("\n");
+}
+free(a); cntf++;
+if (cntm == cntf)
+printf("malloc and free correct!\n");
+else
+printf("cntm-cntf=%d\n", cntm - cntf);
 #pragma region TODO5 参考代码（解注运行）
     /* int main(void) {
      *     int cnt_m = 0, cnt_f = 0;
