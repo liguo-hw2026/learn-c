@@ -2,8 +2,12 @@
  * day18 内存错误专题：泄漏 / 野指针 / 悬空 / 越界（第 4 周 第 2 天）
  * ---------------------------------------------------------------------------
  * 资源（计划原文）：
- *   📺 V2 小甲鱼《带你学 C 带你飞》内存相关章节  https://www.bilibili.com/video/BV17s411N78s
- *   📄 D1「C 内存管理」
+ *   📺 V2 小甲鱼《带你学 C 带你飞》内存章节（已核对真实分 P 标题）：
+ *        P37 动态内存管理1   https://www.bilibili.com/video/BV17s411N78s?p=37
+ *        P38 动态内存管理2   https://www.bilibili.com/video/BV17s411N78s?p=38
+ *        P39 C语言的内存布局 https://www.bilibili.com/video/BV17s411N78s?p=39
+ *      延伸：P25 void指针和NULL指针 · P31 局部变量和全局变量 · P33 生存期和存储类型
+ *   📄 D1 菜鸟教程·C 内存管理  https://www.runoob.com/cprogramming/c-memory-management.html
  * ⚠️ 计划↔视频冲突说明：本日四大内存错误 + 返回局部变量地址，翁恺 V1 无专讲，
  *   计划指定的资源是「小甲鱼 V2」而非翁恺 P，属于计划内部一致安排，无冲突。
  *   自测原定「修上一周成绩管理系统 ≥2 处隐患」，但本仓库尚未建该项目，
@@ -28,6 +32,19 @@
 /* 泄漏计数器：全局，便于 TODO 内自增对比 */
 static int cnt_malloc = 0;
 static int cnt_free = 0;
+
+/* ===================== TODO3 函数定义（文件作用域，必须放在 main 之外） ===================== */
+#pragma region TODO3 函数定义（文件作用域）
+/*
+int* getptr(void) {
+    int x = 10;
+    return &x;       // 返回局部变量地址 → 悬空指针（危险）
+}
+void getptr_ok(int *out) {
+    *out = 10;       // 调用者提供的地址，安全
+}
+*/
+#pragma endregion
 
 int main(void)
 {
@@ -97,18 +114,10 @@ int main(void)
      * 所以 *q 可能侥幸还是 10（弹栈不清零），也可能已被覆盖成乱码，甚至崩溃——
      * 这正是 day16 你搞懂的「悬空指针 / 生命周期」的活样例。
      */
-    #pragma region TODO3 参考代码
+    #pragma region TODO3 参考代码（仅用法，放 main 内；函数定义见文件尾部 TODO3 区域）
     /*
-    int* getptr(void) {
-        int x = 10;
-        return &x;       // 返回局部变量地址 → 悬空指针（危险）
-    }
-    void getptr_ok(int *out) {
-        *out = 10;       // 调用者提供的地址，安全
-    }
-    // 用法：
-    //   int *q = getptr(); printf("%d\n", *q);   // 危险
-    //   int buf; getptr_ok(&buf); printf("%d\n", buf);  // 安全
+    int *q = getptr(); printf("%d\n", *q);          // 危险：q 指向已回收栈帧
+    int buf; getptr_ok(&buf); printf("%d\n", buf);  // 安全：写入调用者提供的地址
     */
     #pragma endregion
 
@@ -152,7 +161,8 @@ int main(void)
     {
         int *a = (int*)malloc(4 * sizeof(int));
         cnt_malloc++;
-        for (int i = 0; i < 4; i++) a[i] = i;
+        int i;
+        for (i = 0; i < 4; i++) a[i] = i;
         // a[4] = 99;   // 越界！踩坏相邻堆内存
         // a[5] = 100;  // 越界！同上
         free(a);
@@ -178,7 +188,8 @@ int main(void)
  *
  * int* read_scores(int n) {
  *     int s[100];
- *     for (int i = 0; i < n; i++) s[i] = i * 10;
+ *     int i;
+ *     for (i = 0; i < n; i++) s[i] = i * 10;
  *     return s;            // ← 返回局部数组地址
  * }
  * int main(void) {
