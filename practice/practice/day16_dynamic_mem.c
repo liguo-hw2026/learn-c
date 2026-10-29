@@ -42,6 +42,8 @@
 #include <stdio.h>
 #include <stdlib.h>   /* malloc / calloc / free / NULL */
 
+int myfunction();
+
 int main(void)
 {
     // ===== TODO1 malloc 基本用法（P86）=====
@@ -51,6 +53,14 @@ int main(void)
     //   验证：打印出 0 1 2 3 4；free 后这块内存归还给堆（不能再依赖其内容）。
     // 【预测】打印 0..n-1 正常；free 后若再读 p[0] 内容是未定义的（可能还是旧值，也可能变）。
     // 【参考代码】见下方 region（解注运行）。
+   /* int* p = (int*)malloc(5 * sizeof(int));
+    for (int i = 0; i < 5; i++)
+        p[i] = i;
+    for (int i = 0; i < 5; i++)
+        printf("%d ", p[i]);
+    printf("\n");
+    free(p);
+    printf("%d ", p[0]);*/
 #pragma region TODO1 参考代码（解注运行）
     /* int main(void) {
      *     int n = 5;
@@ -71,6 +81,13 @@ int main(void)
     //   验证：打印返回值是否为 NULL；写出"不判空 → 解引用 NULL → 崩溃"的结论。
     // 【预测】超大请求返回 NULL；若跳过 if(p==NULL) 直接 p[0]=1，程序崩溃（段错误 / hard fault）。
     // 【参考代码】见下方 region（解注运行）。
+    //
+    //void* p = malloc(1 << 40);//malloc((size_t)1 << 40) 这个表达没学过 需要请简妮解释一下
+    //if (p == NULL)
+    //    printf("malloc failed!\n");
+    //else
+    //    printf("unexpected success\n");
+    //free(p);
 #pragma region TODO2 参考代码（解注运行）
     /* int main(void) {
      *     void *p = malloc((size_t)1 << 40);   // 1 TB，必定失败
@@ -93,6 +110,15 @@ int main(void)
     // 【预测】三者地址各不相同；栈地址通常高于堆地址（x64 Windows/Linux 典型布局）；
     //   全局变量地址与二者都不在同一区。
     // 【参考代码】见下方 region（解注运行）。
+    //myfunction();
+    //int* q = (int*)(malloc(10 * sizeof(int)));
+    //if (q == NULL)
+    //    printf("malloc failed!\n");
+    //else
+    //    printf("q=%p\n", q);
+    //int y = 55;
+    //int* r = &y;
+    //printf("r=%p\n", r);
 #pragma region TODO3 参考代码（解注运行）
     /* int g = 0;
      * int main(void) {
@@ -114,6 +140,14 @@ int main(void)
     //   验证：calloc 分配后元素全是 0；malloc 分配后元素是随机垃圾（未初始化）。
     // 【预测】calloc 的首元素 == 0；malloc 的首元素可能为非零（取决于堆里残留）。
     // 【参考代码】见下方 region（解注运行）。
+ /*   int* c = (int*)calloc(5, sizeof(int));
+    int* m = (int*)malloc(5 * sizeof(int));
+    for (int i = 0; i < 5; i++)
+        printf("c[%d]=%d ",i,c[i]);
+    printf("\n");
+    for (int i = 0; i < 5; i++)
+        printf("m[%d]=%d ", i,m[i]);
+    printf("\n");*/
 #pragma region TODO4 参考代码（解注运行）
     /* int main(void) {
      *     int *pc = (int*)calloc(5, sizeof(int));
@@ -134,6 +168,17 @@ int main(void)
     //   验证：配对时 cnt_malloc == cnt_free；漏 free 时 cnt_malloc > cnt_free。
     // 【预测】正常配对计数相等；故意漏 free 则 malloc 计数比 free 多 1（即泄漏了 1 块）。
     // 【参考代码】见下方 region（解注运行）。
+int cntm = 0;
+int cntf = 0;
+int* a = (int*)malloc(sizeof(int));
+cntm++;
+int* b = (int*)malloc(sizeof(int)); 
+cntm++;
+free(a);
+cntf++;
+printf("cntm=%d,cntf=%d,cntm-cntf=%d\n", cntm, cntf, cntm - cntf);
+free(b);
+
 #pragma region TODO5 参考代码（解注运行）
     /* int main(void) {
      *     int cnt_m = 0, cnt_f = 0;
@@ -147,5 +192,11 @@ int main(void)
      */
 #pragma endregion
 
+    return 0;
+}
+int myfunction() {
+    int x = 33;
+    int* p = &x;
+    printf("p=%p\n", p);
     return 0;
 }
