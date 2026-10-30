@@ -29,6 +29,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int* getptr(int*);
+int* read_scores(int*,int n);
+int repair(void);
+
 /* 泄漏计数器：全局，便于 TODO 内自增对比 */
 static int cnt_malloc = 0;
 static int cnt_free = 0;
@@ -61,6 +65,13 @@ int main(void)
      * 正确版：cnt_malloc=1, cnt_free=1 → 泄漏 0 块。
      * 这是你 day17 就在用的「malloc 计数 == free 计数」自查法的实战。
      */
+    /*int cntm = 0, cntl = 0;
+    int* p = (int*)malloc(5 * sizeof(*p));
+    cntm++;
+    free(p);
+    cntl++;
+    printf("cntm-cntl=%d\n", cntm - cntl);*/
+    
     #pragma region TODO1 参考代码
     /*
     {
@@ -91,6 +102,9 @@ int main(void)
      * 结果不可信：多数情况直接崩溃（段错误 / 访问冲突），少数情况恰好没崩但读到乱码。
      * 这是「未定义行为」的典型——不是「有时对有时错」，是「编译器随便怎么处理都合法」。
      */
+    //int* p;
+    //*p = 42;
+    //printf("*p=%d\n", *p);//错误 提示使用了未初始化的局部变量p
     #pragma region TODO2 参考代码
     /*
     {
@@ -114,6 +128,9 @@ int main(void)
      * 所以 *q 可能侥幸还是 10（弹栈不清零），也可能已被覆盖成乱码，甚至崩溃——
      * 这正是 day16 你搞懂的「悬空指针 / 生命周期」的活样例。
      */
+    //int buf;
+    //getptr(&buf);
+    //printf("x=%d\n", buf);//运行结果是10 但return后函数已经结束原本指向x的地址因为x不在了 所以不知道指向哪里了 我的理解 但为什么是10 什么是弹栈不清零
     #pragma region TODO3 参考代码（仅用法，放 main 内；函数定义见文件尾部 TODO3 区域）
     /*
     int *q = getptr(); printf("%d\n", *q);          // 危险：q 指向已回收栈帧
@@ -131,6 +148,11 @@ int main(void)
      * 可能读到旧值（看着"没错"），也可能乱码/崩溃。
      * 若 free 后 p = NULL，再解引用会立刻崩溃（比静默破坏好定位）——这也是 day17 强调「free 后置 NULL」的原因。
      */
+    //int* a = (int*)malloc(sizeof(*a));
+    //*a = 7;
+    //free(a);
+    ////*a = 8;
+    //printf("a=%d\n", *a);//乱码
     #pragma region TODO4 参考代码
     /*
     {
@@ -156,6 +178,13 @@ int main(void)
      * 要么程序退出时 CRT 报 HEAP CORRUPTION（你 day17 刚见过），
      * 要么静默改坏了相邻内存、制造难以复现的 bug。越界不会"编译报错"，是运行时炸弹。
      */
+//int* p = (int*)malloc(4 * sizeof(*p));
+//for (int i = 0; i < 4; i++)
+//    p[i] = i;
+//p[4] = 5;
+//p[5] = 6;
+//free(p);
+//printf("p[4]=%d,p[5]=%d\n", p[4], p[5]);//出现了 heap corruption
     #pragma region TODO5 参考代码
     /*
     {
@@ -172,6 +201,8 @@ int main(void)
            cnt_malloc, cnt_free, cnt_malloc - cnt_free);
     */
     #pragma endregion
+//自测题修复
+repair();
 
     return 0;
 }
@@ -198,3 +229,22 @@ int main(void)
  *     return 0;
  * }
  */
+int repair(void)
+ {
+     int* s = (int*)malloc(5 * sizeof(*s));
+     read_scores(s, 5);
+     for (int i = 0; i < 5; i++)
+         printf("s[%d]=%d ", i, s[i]);
+     putchar('\n');
+     free(s);
+     return 0;
+}
+int* getptr(int*x) {
+    *x = 10; 
+    return 0;
+}
+int* read_scores(int*s,int n) {
+    for (int i = 0; i < n; i++) 
+        s[i] = i * 10;
+    return 0;            
+}
