@@ -25,6 +25,7 @@
  */
 
 #include <stdio.h>
+#include<string.h>
 
 /* TODO3 需要的辅助函数：定义成"总是编译"的活函数（参考代码里调用它）。
    若暂不调用，MSVC /W3 下不会报错，只是未被引用。 */
@@ -45,6 +46,9 @@ int main(void)
      * sizeof(p) = 8 字节（64 位下指针本身的尺寸，与指向什么无关）。
      * 关键：sizeof 是编译期运算符，对"数组名"取的是数组对象大小，对"指针变量"取的是地址变量的大小。
      */
+    //int a[5] = { 10,20,30,40,50 }; 
+    //int* p = a;
+    //printf("sizeof(a)=%zu,sizeof(p)=%zu\n", sizeof(a),sizeof(p));
     #pragma region TODO1 参考代码
     /*
     {
@@ -65,6 +69,19 @@ int main(void)
      * p = q; 合法：指针变量可以重新指向别处（这正是它和数组名的第一大区别）。
      * 想拷贝数组内容要用 memcpy 或循环逐元素赋值，不能 b = a。
      */
+   // int a[5] = { 10,20,30,40,50 };
+   // int b[5] = { 0 };
+   // //b = a;//EO137 提示必须是可修改的左值 这行注释掉 写正确写法
+   /////* memcpy(b, a, sizeof(a));
+   //// for (int i = 0; i < 5; i++)
+   ////     printf("b[%d]=%d ", i, b[i]);*///用memcpy后遍历没有问题
+   //// printf("\n");
+   // int* p = a;
+   // int* q = b;
+   // p = q;
+   // for (int i = 0; i < 5; p++,i++)
+   //     printf("b[%d]=%d ", i, *p);
+   // printf("\n");
     #pragma region TODO2 参考代码
     /*
     {
@@ -88,6 +105,9 @@ int main(void)
      * 这就是 P83 标题"传进函数后 sizeof 不对了"的实体证据——函数里再也拿不到数组元素个数。
      * ⚠️ 所以任何"数组当参数"的函数，都要额外传一个长度 n，不能靠 sizeof 算长度。
      */
+    //int a[5] = { 0 };
+    //printf("sizeof(a)=%zu\n", sizeof(a));
+    //g(a);//需要传数组的长度 否则函数内只有头地址 不知道读到哪里为止
     #pragma region TODO3 参考代码
     /*
     {
@@ -111,6 +131,14 @@ int main(void)
      * p3 两处改动都报错（双 const）。
      * 助记：const 在 * 左边 → 所指内容不可改；const 在 * 右边 → 指针本身不可改。
      */
+    int x = 3, y = 33;
+    const int* p1 = &x;   
+    int* const p2 = &x;
+    const int* const p3 = &x;
+    //*p3 = 5; p3 = &y;//依然编译器报错EO137 必须是可以修改的左值；
+    //p2 = &y;//编译器报错E0137 必须是可以修改的左值（指针本身const，改指向非法）；
+    //*p1 = 5;//编译器报错EO137 必须是可以修改的左值；
+    //我的记忆方法是const后面接指针就是const指针 后面接*就是const解指针的值 两个都接 那就都const 
     #pragma region TODO4 参考代码
     /*
     {
