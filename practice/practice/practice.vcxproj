@@ -223,7 +223,11 @@
       <!-- 从生成中排除：main() 由 day19_pointer_arith.c（第4周第3天）提供，避免 LNK2005 多重定义（day18 已闭环归档） -->
     </ClCompile>
     <ClCompile Include="day19_pointer_arith.c">
-      <!-- main() 由本文件提供（第4周第3天 指针运算与指针vs数组三个区别·上：p+i/p-q/指针比较/数组名常量指针） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+      <!-- 从生成中排除：main() 由 day20_pointer_array2.c（第4周第4天）提供，避免 LNK2005 多重定义（day19 已闭环归档） -->
+    </ClCompile>
+    <ClCompile Include="day20_pointer_array2.c">
+      <!-- main() 由本文件提供（第4周第4天 指针vs数组三个区别·下：sizeof(a)vs sizeof(p)/能否整体赋值/const指针） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->

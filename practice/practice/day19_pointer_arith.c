@@ -29,6 +29,8 @@
 
 #include <stdio.h>
 
+void f(int*);
+
 int main(void)
 {
     /* ===================== TODO1 指针 + 整数（p+i） ===================== */
@@ -42,6 +44,11 @@ int main(void)
      * p+2 比 p 大 8 字节；*(p+2) == a[2] == 30。
      * 核心：指针算术的单位是"元素"，不是"字节"——这正是它和整数地址运算的本质区别。
      */
+   /* int a[5] = { 10,20,30,40,50 };
+    int* p = a;
+    printf("int=%zu\n", sizeof(int));
+    printf("p=%p,p+1=%p,p+2=%p\n", p, p + 1, p + 2);
+    printf("*(p+2)=%d,a[2]=%d", *(p + 2), a[2]);*/
     #pragma region TODO1 参考代码
     /*
     {
@@ -63,6 +70,10 @@ int main(void)
      * 指针相减的结果类型是 ptrdiff_t，单位是"元素个数"——只有同类型、指向同一数组的指针相减才有意义。
      * 不同数组/不同类型的指针相减是未定义行为。
      */
+  /*  int a[5] = { 10,20,30,40,50 };
+    int* p1 = &a[1];
+    int* p2 = &a[4];
+    printf("p2-p1=%td", p2 - p1);*/
     #pragma region TODO2 参考代码
     /*
     {
@@ -84,6 +95,14 @@ int main(void)
      * 但比较"指向不同数组的指针"大小是未定义行为（结果不可信）——不要用来判断跨数组先后。
      * == 比较最安全：判断两个指针是否指向同一地址。
      */
+    //int a[5] = { 10,20,30,40,50 };
+    //int b[5] = { 20,30,40,50,60 };
+    //int* p = a;
+    //int* q = b;
+    //for (int i = 0; p < (a + 5); p++,i++)
+    //    printf("a[%d]=%d ", i,*p);
+    //printf("\n");
+    //printf("p>q?=%d", p>q);
     #pragma region TODO3 参考代码
     /*
     {
@@ -111,6 +130,11 @@ int main(void)
      * a++ 编译失败：数组名 a 是"常量指针"（地址不可改），不能自增/不能整体赋值；
      * 而 int *p = a; p++ 合法——这是"指针"与"数组名"的第一个区别（能否 ++）。
      */
+    //int a[5] = { 10,20,30,40,50 };
+    //for (int i = 0; i < 5; i++)
+    //    printf("a[%d]=%d,*(a+%d)=%d\n", i, a[i], i, *(a + i));
+    //printf("\n");
+    //a++;//这里编译器已经报EO307，提示必须是可修改的左值，我理解数组地址是放在只读段，不能自增自减，必须用复制出来地址变量增减来指向只读段
     #pragma region TODO4 参考代码
     /*
     {
@@ -131,6 +155,11 @@ int main(void)
      * 关键延伸：数组传参进函数后退化成指针（这就是 P83 标题"传进函数后 sizeof 不对了"的根因——
      * 函数内 sizeof(arr) 拿到的是"指针大小 8 字节"，不是"数组总字节"）。这点 day20 再 drill。
      */
+    int a[5] = { 10,20,30,40,50 };
+    int* p = a;
+    for (int i = 0; i < 5; i++)
+        printf("a[%d]=%d,*(p+%d)=%d\n", i, a[i], i, *(p + i));
+    f(a);
     #pragma region TODO5 参考代码
     /*
     {
@@ -148,4 +177,8 @@ int main(void)
     #pragma endregion
 
     return 0;
+}
+
+void f(int*x) {
+    printf("sizeof=%zu\n", sizeof(x));
 }
