@@ -231,7 +231,11 @@
       <!-- 从生成中排除：main() 由 day21_string_ptr.c（第4周第5天）提供，避免 LNK2005 多重定义（day20 已闭环归档） -->
     </ClCompile>
     <ClCompile Include="day21_string_ptr.c">
-      <!-- main() 由本文件提供（第4周第5天 字符串：char* vs char[]/字符串输入输出/字符串数组/单字符IO） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+      <!-- 从生成中排除：main() 由 day22_string_func.c（第4周第6天）提供，避免 LNK2005 多重定义（day21 已闭环归档） -->
+    </ClCompile>
+    <ClCompile Include="day22_string_func.c">
+      <!-- main() 由本文件提供（第4周第6天 字符串处理函数自己实现：strlen/strcat/strcmp/strcpy/strstr） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->

@@ -15,7 +15,8 @@
  *   TODO2  字符串输入输出（%s / puts / scanf / fgets）          —— P89
  *   TODO3  字符串数组（char *names[]，指针数组）                —— P90
  *   TODO4  单字符输入输出（getchar / putchar，返回 int）        —— P91
- *   自测锚点：解释「char *s="abc"; s[0]='x'; 崩溃」而「char t[]="abc"; t[0]='x'; 正常」的根因。
+ *   自测锚点：解释「char *s="abc"; s[0]='x'; 是未定义行为(UB)——在 MCU/flash 上必 HardFault，
+ *       在 MSVC Debug 上可能不崩但依然非法」而「char t[]="abc"; t[0]='x'; 正常(改的是栈副本)」的根因。
  *
  * 格式约定（2026-10 定）：
  *   【任务】【预测】平铺可见、不折叠；【参考代码】用 #pragma region 折叠，置于 /* *\/ 内防误编译。
@@ -32,15 +33,23 @@ int main(void)
      * 对比两段代码，取消注释分别运行，观察哪段会崩溃：
      *   (A) char *s = "abc";  s[0] = 'x';
      *   (B) char t[] = "abc";  t[0] = 'x';
-     * 思考：为什么 (A) 崩、(B) 不崩？这和 day20 讲的「数组名是地址常量」有什么关系？
+     * 思考：为什么 (A) 在你的 PC 上「没崩」、但在 MCU/flash 上会崩？(B) 为什么永远正常？
+     * 这和 day20 讲的「数组名是地址常量」有什么关系？
      */
     /* 【预测】
-     * (A) 运行时崩溃（写入访问冲突）："abc" 是字符串字面量，存放在只读段（.rdata / flash），
-     *     s 只是个指针，指向那块只读内存；试图改写 = 未定义行为，现代 OS 直接拦下（硬件 fault）。
-     * (B) 正常：t 是在栈上开的字符数组，初始化时把 "abc" 拷进数组；改的是栈上副本，随便改。
-     * ⚠️ 根因区别：char* 指向「只读常量区」，char[] 是「可写栈缓冲」。嵌入式里后者才是你该放
-     *    串口/传感器字符串的地方；前者只能读。
+     * (A) 关键坑：在【你这台 MSVC Debug 上可能不崩】——但依旧是错的！
+     *     "abc" 是字符串字面量，C 标准规定「改写它 = 未定义行为(UB)」。
+     *     - GCC/Linux 与真实 MCU(flash/.rodata 只读)：字面量放只读页，写它 → 硬件 fault(崩溃 / HardFault)；
+     *     - MSVC Debug：默认把字面量放「可写段」(只读池化 /GF 在 Debug 关闭)，OS 不拦 → 你看到 s:xbc 没报错。
+     *     ⚠️ 不崩 ≠ 合法：UB 只是"侥幸没被抓住"。同一行代码烧进 MCU 必 HardFault。
+     * (B) 正常：t 是栈上数组，初始化时把 "abc" 拷进数组；改的是栈上副本，随便改 → t:xbc。
+     * ⚠️ 根因区别：char* 指向「字面量(只读，写=UB)」，char[] 是「可写栈缓冲(拷贝自字面量)」。
+     *    嵌入式里串口/传感器字符串必须放 char[]；字面量只能读，永远别写。
      */
+    //char* s = "abc";  s[0] = 'x';
+    //printf("s:%s\n", s);//没报错 什么原因
+    //char t[] = "abc";  t[0] = 'x';
+    //printf("t:%s", t);
     #pragma region TODO1 参考代码
     /*
     {
@@ -64,6 +73,14 @@ int main(void)
      * fgets 读整行（含空格），但会把结尾 '\n' 也读进 buf —— 打印时要留意多一个换行。
      * ⚠️ MSVC 下 gets() 已被禁用（C4996），一律用 fgets 替代；scanf %s 无长度保护，buf 要开够大。
      */
+    //char buf[100];
+    //printf("enter something:");
+    ////scanf("%s", buf);
+    ////puts(buf);
+    ////printf(">>%s<<\n", buf);
+    //fgets(buf, sizeof(buf), stdin);
+    //puts(buf);//不用考虑%的类型错误
+    //printf(">>%s<<\n", buf);//能看出buf多读了一个\n
     #pragma region TODO2 参考代码
     /*
     {
@@ -92,6 +109,11 @@ int main(void)
      * sizeof(names) = 3 * sizeof(char*) = 24（64 位下每个指针 8 字节）—— 注意这不是字符串总长度，
      *   想求元素个数要用 sizeof(names)/sizeof(names[0]) = 3。
      */
+    //char* names[] = { "Alice","Bob","Carol" };
+    //for (int i = 0; i < 3; i++)
+    //    puts(names[i]);
+    //printf("sizeof(names)=%zu\n", sizeof(names));//这只是指针的长度之和
+    //printf("number of names=%zu\n", sizeof(names) / sizeof(names[0]));
     #pragma region TODO3 参考代码
     /*
     {
@@ -114,6 +136,11 @@ int main(void)
      *   超出 char 范围）。若用 char 接，EOF 会被截断成某个普通字符，循环 forever。
      * 正确写法：int c; while ((c = getchar()) != '\n' && c != EOF) putchar(c);
      */
+    int c = 0;
+    printf("enter something:");
+    while ((c = getchar()) != EOF/* && c != '\n'*/)
+        putchar(c);
+
     #pragma region TODO4 参考代码
     /*
     {
