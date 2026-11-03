@@ -30,6 +30,8 @@
 size_t my_strlen(const char* s);
 char* my_strcat(char* dest, const char* src);
 int my_strcmp(const char* a, const char* b);
+char* my_strcpy(char* dest, const char* src);
+char* my_strstr(const char* hay, const char* needle);
 
 int main(void)
 {
@@ -92,9 +94,9 @@ int main(void)
      * 注意用 unsigned char 比较（避免符号扩展导致 '\xff' 等被当成负数而排错序）。
      */
 
-    printf("cmp=%d\n", my_strcmp("abc","abd"));// 预测 <0（负）
-    printf("cmp=%d\n", my_strcmp("ab", "ab"));
-    printf("cmp=%d\n", my_strcmp("abd", "abc"));
+    //printf("cmp=%d\n", my_strcmp("abc","abd"));// 预测 <0（负）
+    //printf("cmp=%d\n", my_strcmp("ab", "ab"));
+    //printf("cmp=%d\n", my_strcmp("abd", "abc"));
     #pragma region TODO3 参考代码
     /*
     int my_strcmp(const char *a, const char *b)
@@ -117,6 +119,7 @@ int main(void)
      * ⚠️ 两大约束：① dest 空间必须 >= strlen(src)+1；② src 必须 '\0' 结尾，否则会越界读内存。
      * 标准 strcpy 同样不检查，安全版是 strncpy（但仍需自己补 '\0'）。
      */
+
     //char d[20];
     //printf("cpy=%s\n", my_strcpy(d, "xyz"));   // 预测 xyz
     #pragma region TODO4 参考代码
@@ -140,8 +143,9 @@ int main(void)
      *   比到 'e'≠'d'）绝不能 return NULL——必须从 hay 的下一字符（i+1）重新从 needle[0] 匹配（回退）。
      * 只有当 needle 完整匹配（j 走到其 '\0'）才返回。needle 为空串返回 hay 本身。
      */
-    //char *r = my_strstr("abcde", "cd");
-    //printf("strstr=%s\n", r ? r : "NULL");   // 预测 cde
+
+    char *r = my_strstr("abcde", "cd");
+    printf("strstr=%s\n", r ? r : "NULL");   // 预测 cde
     #pragma region TODO5 参考代码
     /*
     char* my_strstr(const char *hay, const char *needle)
@@ -193,4 +197,34 @@ int my_strcmp(const char* a, const char* b) {
            导致差值符号反转、排序错乱（与标准库 strcmp 行为不一致）。相等比较 *a==*b 不受影响，
            但相减求差时必须转型。 */
         return (unsigned char)*a - (unsigned char)*b;
+}
+char* my_strcpy(char* dest, const char* src) {
+    char* ret = dest;
+    while (*src != '\0') {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+    *dest = '\0';
+    return ret;
+}
+char* my_strstr(const char* hay, const char* needle) {
+    const char* pn = needle;
+    const char* ph = hay;
+    while (*hay != '\0') {
+        if (*hay == *pn) {
+            ph = hay;
+            while (*pn != '\0') {
+                if (*ph!= *pn)
+                    break;
+                pn++;
+                ph++;
+            }
+            if (*pn== '\0')
+                return (char*)hay;
+        }
+        hay++;
+        pn = needle;
+    }
+    return NULL;
 }
