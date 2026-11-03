@@ -239,7 +239,11 @@
       <!-- 从生成中排除：main() 由 day23_memory_errors2.c（第4周第3天 内存错误专题·下）提供，避免 LNK2005（day22 强化练习已闭环归档） -->
     </ClCompile>
     <ClCompile Include="day23_memory_errors2.c">
-      <!-- main() 由本文件提供（第4周第3天 内存错误专题·下：泄漏/野指针/悬空/越界/返回堆内存约定） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+      <!-- 从生成中排除：main() 由 day24_student_sys_ptr.c（第4周第4天）提供，避免 LNK2005（day23 已闭环归档） -->
+    </ClCompile>
+    <ClCompile Include="day24_student_sys_ptr.c">
+      <!-- main() 由本文件提供（第4周第4天 用指针重写学生成绩管理系统·上：dynamic Student* + 指针传参 + 指针遍历 + free） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->

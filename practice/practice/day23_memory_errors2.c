@@ -161,22 +161,44 @@ char* process_packet_fix(int len) {
 */
 #pragma endregion
 char*make_buffer(size_t n);
+void alloc_ok(void);
+void alloc_leak(void);
+char* process_packet_fix(int len);
 int main(void) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);   // 控制台输出代码页设为 UTF-8，匹配源文件编码 → 中文正常显示
 #endif
     // 逐一定位运行（一次跑一个，避免互相干扰）：
     // TODO1: make_buffer 用法（见 TODO1 参考代码，放进 main 解注）
-    size_t n = 4*sizeof(char);
+   /* size_t n = 4*sizeof(char);
     char*i=make_buffer(n);
     strcpy(i,"33");
     printf("i=%s,add of i=%p\n", i, (void*)i);
     free(i);
     g_free_count++;
-    leak_check("TODO1");
+    leak_check("TODO1");*/
     // TODO2: alloc_ok(); alloc_leak(); 各配 leak_check
-    // 
+ /*   alloc_ok();
+    leak_check("TODO2");
+    alloc_leak();
+    leak_check("TODO2");*/
     // TODO3: process_packet_fix(8) + free + leak_check
+    //char* process_packet_bug(int len) {
+    //    char local_buf[16];              
+    //    int* p;                          // p没有初始化 你不知道他指向何处，下一行直接复制，你改了哪里的值，并不知道 1处错误
+    //    *p = len;
+    //    char* heap = (char*)malloc(len); 
+    //    if (!heap) return NULL;
+    //    heap[0] = 'A';
+    //    heap[len] = 'B';                 // 下标从0算起 和长度的关系是下标=长度-1 1处错误
+    //    strcpy(local_buf, "PKT");//返回前也没有free堆空间 leak了 1处错误
+    //    return local_buf;//这是个函数，local_buf是局部变量，返回局部变量，栈释放后，指针悬空 1处错误
+    char* pkt = process_packet_fix(8);
+   if (pkt) 
+       printf("pkt[0]=%c,pkt[7]=%c\n",*pkt ,*(pkt+7)); 
+   free(pkt);
+   g_free_count++; 
+   leak_check("TODO3");     
     return 0;
 }
 char* make_buffer(size_t n) {
@@ -187,4 +209,36 @@ char* make_buffer(size_t n) {
         }
     g_malloc_count++;
     return p;
+}
+void alloc_ok(void) {
+    char* p = malloc(4 * sizeof(char));
+    if (p == NULL) {
+        printf("malloc failed!\n");
+        return;
+    }
+    g_malloc_count++;
+    strcpy(p, "333");
+    printf("p=%s,addp=%p\n", p, (void*)p);
+    free(p);
+    g_free_count++;
+}
+void alloc_leak(void) {
+    char* p = malloc(4 * sizeof(char));
+    if (p == NULL) {
+        printf("malloc failed!\n");
+        return;
+    }
+    g_malloc_count++;
+    strcpy(p, "555");
+    printf("p=%s,addp=%p\n", p, (void*)p);
+}
+char* process_packet_fix(int len) {
+    if (len <= 0) return NULL;
+    char* heap = make_buffer((size_t)len);   // 新约定：调用方 free
+    if (!heap) return NULL;
+    heap[0] = 'A';
+    heap[len - 1] = 'B';             // 修越界：用 len-1
+    // 野指针：所有指针使用前都先赋合法地址（p 已不需要）
+    printf("process_packet_fix: heap[0]=%c heap[last]=%c\n", heap[0], heap[len - 1]);
+    return heap;                     // 返回堆指针，由调用方 free
 }
