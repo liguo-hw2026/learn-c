@@ -1,4 +1,4 @@
-/*
+﻿/*
  * day23_memory_errors2.c
  * 第 4 周 第 3 天（内存错误专题·下，原第2周·下）
  *
@@ -30,9 +30,15 @@
  *   置于 /* *\/ 内防误编译。自己敲代码跑，不要只看参考。
  */
 
+#define _CRT_SECURE_NO_WARNINGS   // 关闭 MSVC 对 strcpy/scanf 等的"不安全"弃用警告(C4996)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef _WIN32
+#include <windows.h>   // 用于 SetConsoleOutputCP，根治中文控制台输出乱码
+#endif
 
 /* 泄漏/释放计数器：全局维护，malloc 时 +1、free 时 +1，差值即泄漏块数。
    day18 已用过同类计数器；本日 TODO2 把它升级为"可复用自检手法"。 */
@@ -154,11 +160,31 @@ char* process_packet_fix(int len) {
 //   leak_check("TODO3");             // 应报 (OK)
 */
 #pragma endregion
-
+char*make_buffer(size_t n);
 int main(void) {
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);   // 控制台输出代码页设为 UTF-8，匹配源文件编码 → 中文正常显示
+#endif
     // 逐一定位运行（一次跑一个，避免互相干扰）：
     // TODO1: make_buffer 用法（见 TODO1 参考代码，放进 main 解注）
+    size_t n = 4*sizeof(char);
+    char*i=make_buffer(n);
+    strcpy(i,"33");
+    printf("i=%s,add of i=%p\n", i, (void*)i);
+    free(i);
+    g_free_count++;
+    leak_check("TODO1");
     // TODO2: alloc_ok(); alloc_leak(); 各配 leak_check
+    // 
     // TODO3: process_packet_fix(8) + free + leak_check
     return 0;
+}
+char* make_buffer(size_t n) {
+    char* p = (char*)malloc(n);
+        if (p == NULL){
+            printf("malloc failed!\n");
+            return NULL;
+        }
+    g_malloc_count++;
+    return p;
 }
