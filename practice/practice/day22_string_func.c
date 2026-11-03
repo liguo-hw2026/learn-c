@@ -27,6 +27,10 @@
 
 #include <stdio.h>
 
+size_t my_strlen(const char* s);
+char* my_strcat(char* dest, const char* src);
+int my_strcmp(const char* a, const char* b);
+
 int main(void)
 {
     /* ===================== TODO1 自己实现 strlen（P92） ===================== */
@@ -39,8 +43,8 @@ int main(void)
      * 顺着 s 走，遇到 '\0' 就停，数走了几个字符。const char* 表示"函数不修改所指内容"，是契约也是保护。
      * size_t 是无符号长度类型（能表达任意合法内存长度，不会为负）；用 int 在长字符串上可能溢出/负号歧义。
      */
-    //char *s = "hello";
-    //printf("len=%zu\n", my_strlen(s));   // 预测 5
+    /*char *s = "hello";
+    printf("len=%zu\n", my_strlen(s));   */// 预测 5
     #pragma region TODO1 参考代码
     /*
     size_t my_strlen(const char *s)
@@ -87,7 +91,10 @@ int main(void)
      * 逐字符比 ASCII 码，第一个不同处返回差值；两边都到 '\0' 仍相同则返回 0。
      * 注意用 unsigned char 比较（避免符号扩展导致 '\xff' 等被当成负数而排错序）。
      */
-    //printf("cmp=%d\n", my_strcmp("abc","abd"));   // 预测 <0（负）
+
+    printf("cmp=%d\n", my_strcmp("abc","abd"));// 预测 <0（负）
+    printf("cmp=%d\n", my_strcmp("ab", "ab"));
+    printf("cmp=%d\n", my_strcmp("abd", "abc"));
     #pragma region TODO3 参考代码
     /*
     int my_strcmp(const char *a, const char *b)
@@ -152,4 +159,38 @@ int main(void)
     #pragma endregion
 
     return 0;
+}
+size_t my_strlen(const char* s) {
+    int i = 0;
+    size_t cnt = 0;
+    while (s[i] != '\0') {
+        i++;
+        cnt++;
+    }
+    return cnt;
+}
+char* my_strcat(char* dest, const char* src) {
+    char* ret = dest;
+    while (*dest != '\0') 
+        dest++;
+    while (*src != '\0') {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+    *dest = '\0';
+    return ret;
+}
+int my_strcmp(const char* a, const char* b) {
+    while (*a != '\0' && *a == *b) {
+        a++;
+        b++;
+    }
+    if (*a == '\0' && *b == '\0')
+        return 0;
+    else
+        /* ⚠️ 必须按 unsigned char 比较：char 默认有符号，遇到 0x80~0xFF 会被符号扩展成负数，
+           导致差值符号反转、排序错乱（与标准库 strcmp 行为不一致）。相等比较 *a==*b 不受影响，
+           但相减求差时必须转型。 */
+        return (unsigned char)*a - (unsigned char)*b;
 }
