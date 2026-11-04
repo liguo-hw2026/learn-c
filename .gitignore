@@ -24,3 +24,6 @@ x86/
 *.log
 *.recipe
 *.lastbuildstate
+
+# 程序运行产物（不跟踪）
+students.txt
