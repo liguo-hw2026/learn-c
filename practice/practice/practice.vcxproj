@@ -247,7 +247,11 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day25_student_sys_ptr_qsort.c">
-      <!-- main() 由本文件提供（第4周第5天 用指针重写学生成绩管理系统·下：qsort 排序 + 按姓名查找 + 写文件） -->
+      <!-- 从生成中排除：main() 由 day26_memory_layout.c（第4周第6天）提供，避免 LNK2005 多重定义（day25 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day26_memory_layout.c">
+      <!-- main() 由本文件提供（第4周第6天 复盘+手绘内存布局图·上：代码段/数据段/BSS/堆/栈 各样本地址观察） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->
