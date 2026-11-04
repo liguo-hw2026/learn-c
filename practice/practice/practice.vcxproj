@@ -243,7 +243,11 @@
       <!-- 从生成中排除：main() 由 day24_student_sys_ptr.c（第4周第4天）提供，避免 LNK2005（day23 已闭环归档） -->
     </ClCompile>
     <ClCompile Include="day24_student_sys_ptr.c">
-      <!-- main() 由本文件提供（第4周第4天 用指针重写学生成绩管理系统·上：dynamic Student* + 指针传参 + 指针遍历 + free） -->
+      <!-- 从生成中排除：main() 由 day25_student_sys_ptr_qsort.c（第4周第5天）提供，避免 LNK2005 多重定义（day24 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day25_student_sys_ptr_qsort.c">
+      <!-- main() 由本文件提供（第4周第5天 用指针重写学生成绩管理系统·下：qsort 排序 + 按姓名查找 + 写文件） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->
