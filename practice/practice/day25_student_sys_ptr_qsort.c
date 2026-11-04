@@ -8,10 +8,10 @@
  * 参考：day24_student_sys_ptr.c（指针版框架：Student 定义 / create_students / input_ptr / print_ptr / find_by_id，本日复用其逻辑）
  */
 
+#define _CRT_SECURE_NO_WARNINGS   // ⚠️ 必须在 include 之前定义，才能压掉 scanf 的 C4996 弃用警告
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define _CRT_SECURE_NO_WARNINGS
 #ifdef _WIN32
 #include <windows.h>   // 根治中文控制台输出乱码（day23 已落地）
 #endif
@@ -130,16 +130,24 @@ int main(void) {
     printf("--- 录入后（未排序）---\n");
     print_ptr(st, n);
 
+    qsort(st, n, sizeof(Student), cmp_by_id);
+    printf("--- 按学号排序后 ---\n");
+    print_ptr(st, n);
+
+    qsort(st, n, sizeof(Student), cmp_by_name);
+    printf("--- 按姓名排序后 ---\n");
+    print_ptr(st, n);
+
     qsort(st, n, sizeof(Student), cmp_by_score);
     printf("--- 按成绩排序后 ---\n");
     print_ptr(st, n);
 
-    Student* hit = find_by_name(st, n, "Alice");
+    Student* hit = find_by_name(st, n, "Bob");
     if (hit) printf("找到 %s: id=%d score=%.1f\n", hit->name, hit->id, hit->score);
     else     printf("未找到该姓名\n");
 
-    if (save_to_file(st, n, "students.txt") == 0)
-        printf("已写入 students.txt（请打开核对）\n");
+  /*  if (save_to_file(st, n, "students.txt") == 0)
+        printf("已写入 students.txt（请打开核对）\n");*/
 
     free(st);
     return 0;
@@ -175,7 +183,7 @@ int cmp_by_name(const void* a, const void* b) {
 }
 int cmp_by_score(const void* a, const void* b) {
     const Student* sa = a; const Student* sb = b;
-    return (sa->score > sb->score) - (sa->score < sb->score);
+    return -((sa->score > sb->score) - (sa->score < sb->score));
 }
 Student* find_by_name(const Student* p, int n, const char* name) {
     for (int i = 0; i < n; i++)
