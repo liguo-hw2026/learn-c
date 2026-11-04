@@ -17,6 +17,13 @@
 #endif
 
 // ============ 数据结构 ============
+// 📌【前置知识补给 · 结构体最小前置】（正式教学见第 5 周第 1–2 天 · V1 96–104 讲）
+//   结构体 = 把若干个"不同类型"的变量打包成一个自定义类型，方便整体传参/管理。
+//   - `struct { ... }` 定义一个"结构"（一组字段）；`typedef ... Student` 给它起别名 `Student`，
+//     之后写 `Student x;` 即可声明一个该结构变量，不必每次写 `struct XXX`。
+//   - 访问字段：变量用 `x.id`（点）；指向结构的指针用 `p->id`（箭头，等价 `(*p).id`）。
+//   - 本日只把 Student 当"装 id/name/score 的盒子"用，目的是练【指针版】的 malloc/遍历/free；
+//     对齐、sizeof 手算、嵌套结构体等正式内容第 5 周再展开，今日不深究。
 typedef struct {
     int id;
     char name[32];
@@ -82,11 +89,54 @@ Student* find_by_id(const Student* p, int n, int id) {
 */
 #pragma endregion
 
+Student* create_students(int n);
+void input_ptr(Student* p, int n);
+void print_ptr(const Student* p, int n);
+Student* find_by_id(const Student* p, int n, int id);
+
 int main(void) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);   // 控制台输出代码页设为 UTF-8，匹配源文件编码 → 中文正常显示
 #endif
     // TODO：解注上方参考代码（或自己写指针版）跑通；验证动态分配 + 指针遍历 + free 无泄漏
     // 收工时用 day23 的 leak_check 思路确认 malloc/free 配平（本文件若加计数器可在 free 后打印差值）
+    int n = 3;
+         Student* st = create_students(n);
+         if (st) {
+             input_ptr(st, n);
+             printf("--- 全部学生 ---\n");
+             print_ptr(st, n);
+             Student* hit = find_by_id(st, n, 2);
+             if (hit) printf("找到 id=2: %s %.1f\n", hit->name, hit->score);
+             else     printf("未找到 id=2\n");
+             free(st);                 // 调用方释放
+         }
     return 0;
+}
+// —— 工厂函数：分配 N 个 Student 并返回指针（调用方负责 free）——
+Student* create_students(int n) {
+    Student* p = (Student*)malloc((size_t)n * sizeof(Student));
+    if (!p) return NULL;          // 判空（day23 教训：malloc 可能失败）
+    return p;                     // 返回堆指针，释放责任交给调用方
+}
+
+// —— 录入：指针传参 + 指针遍历 ——
+void input_ptr(Student* p, int n) {
+    for (int i = 0; i < n; i++) {
+        printf("输入 学号 姓名 成绩（第%d个）: ", i + 1);
+        scanf("%d %31s %f", &p[i].id, p[i].name, &p[i].score);  // p[i] 等价 *(p+i)
+    }
+}
+
+// —— 打印：const 指针传参（只读，表明不修改）——
+void print_ptr(const Student* p, int n) {
+    for (int i = 0; i < n; i++)
+        printf("%d\t%s\t%.1f\n", p[i].id, p[i].name, p[i].score);
+}
+
+// —— 按 id 查找：返回指向找到元素的指针，找不到返回 NULL ——
+Student* find_by_id(const Student* p, int n, int id) {
+    for (int i = 0; i < n; i++)
+        if (p[i].id == id) return (Student*)&p[i];   // 返回元素地址（强转掉 const）
+    return NULL;
 }
