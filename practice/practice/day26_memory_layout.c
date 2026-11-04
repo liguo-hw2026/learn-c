@@ -2,7 +2,7 @@
  * day26_memory_layout.c —— 第 4 周 第 6 天（复盘 + 手绘内存布局图 · 上，机动日 1.2h）
  * 计划源知识点：一张图画出【代码段 / 只读数据段 / 已初始化数据段(.data) / BSS / 堆 / 栈 / 内核区】，
  *   并标注：全局变量、static、字符串字面量、malloc、局部变量各自落在哪里
- * 资源：📺 V4 合集第 2 章（电阻串并联/等效变换，30min）https://www.bilibili.com/video/BV1Lb4y1m7vD ｜ 📄 D1 复习
+ * 资源：📺 猫巷故事局《从零开始学电路》EP06「串联、并联到底怎么看？从等效电路到分压分流」（2026-10-17 发布，23:13；bvid 待补）｜ 📄 D1 复习
  * ⚠️ 本日无翁恺 P 号（V2 盲区规则已做同主题手动 diff：手绘内存布局为首次出现，与 day23 内存错误专题无重复）
  * 硬件相关性：🟢 极高——嵌入式绕不开"这个变量落在 Flash 还是 RAM"：链接脚本、启动文件、
  *   .data/.bss 的拷贝初始化，全是这张图的工程化版本。面试也爱考。
@@ -12,6 +12,10 @@
  *   传参时习惯强转 (void*)——因为 %p 承诺接收 void* 类型。地址数值每次运行可能变（ASLR），
  *   你要看的不是具体数值，而是【谁和谁落在同一个区域、各区域之间的相对位置】。
  *   ⭐ 另一个要点：`char* lit = "abc";` 里 lit（指针变量本身）和它指向的内容（字面量）是两个东西、两个地址。
+ * ⚠️【2026-11-04 甘实测补充 · 重要】段的【上下顺序】不是 C 语言知识点，由链接器 / 可执行文件格式决定：
+ *   MSVC(PE) 实测为 .text < .data < .rdata(.rodata) < .bss，与 Linux ELF 教科书图（.rodata 排在 .data 前）相反。
+ *   稳定可迁移的结论只有「三大块」：.text/.data/.rodata/.bss 同属【PE 映像】（掉电不丢、只读或静态存储期），
+ *   栈与堆在完全不同的地址量级（运行时 RAM）。地址高低随 ASLR / 编译器 / 链接脚本变化，不要背顺序。
  */
 
 #define _CRT_SECURE_NO_WARNINGS   // 必须在 include 之前定义，才能压掉 scanf 的 C4996 弃用警告
@@ -89,6 +93,27 @@ int main(void) {
     SetConsoleOutputCP(CP_UTF8);
 #endif
     // TODO：先填【预测】，再在这里补全地址打印并运行
+    static int s_l_init = 99;    // static 局部（已初始化）
+    static int s_l_uninit;       // static 局部（未初始化）
+    int local = 5;               // 普通局部变量
+    char* lit = "hello day26";   // lit 本身在栈，指向的字面量在只读数据段
+    int* heap = (int*)malloc(sizeof(int));
+    if (!heap) return 1;
+    *heap = 123;
 
+    printf("--- 各样本地址（只看分组，不看具体数值）---\n");
+    printf("函数 helper            : %p\n", (void*)helper);//函数在text段
+    printf("字面量本体（lit 的值） : %p\n", (void*)lit);//字面量在rodata段
+    printf("指针变量本身（&lit）   : %p\n", (void*)&lit);//指针变量本身在栈
+    printf("g_init   (全局已初始化): %p\n", (void*)&g_init);//全局已初始化在data段
+    printf("g_uninit (全局未初始化): %p\n", (void*)&g_uninit);//全局未初始化在bss段
+    printf("s_g_init (static全局i): %p\n", (void*)&s_g_init);//static 全局（已初始化）在data段
+    printf("s_g_uninit(static全局u): %p\n", (void*)&s_g_uninit);//static 全局（未初始化）在bss段
+    printf("s_l_init (static局部i): %p\n", (void*)&s_l_init); //(static局部i)在data段
+    printf("s_l_uninit(static局部u): %p\n", (void*)&s_l_uninit); //(static局部u)在bss段
+    printf("local    (普通局部)   : %p\n", (void*)&local);//在栈
+    printf("heap     (malloc)     : %p\n", (void*)heap);//在堆
+
+    free(heap);
     return 0;
 }
