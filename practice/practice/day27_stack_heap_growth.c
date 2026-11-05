@@ -25,9 +25,9 @@
 //   3) 观察堆：连续 malloc 4 块，打印地址，看**整体趋势**（不要求严格递增）
 //   4) 手绘：把 day26 那张图补上两个箭头（栈朝哪、堆朝哪），标出中间「未使用的空隙」
 // 【预测】（跑之前填，写在下面对应代码行尾）
-//   - 调用越深，局部变量地址会变大还是变小？ 我猜：____
-//   - 连续 malloc，地址整体递增还是递减？     我猜：____
-//   - 栈和堆是相向生长还是背向生长？         我猜：____
+//   - 调用越深，局部变量地址会变大还是变小？ 我猜：____朝着堆 高低在windows下不好预判
+//   - 连续 malloc，地址整体递增还是递减？     我猜：____朝着栈 高低在windows下不好预判
+//   - 栈和堆是相向生长还是背向生长？         我猜：____相向
 // 【完成标准】① 两个方向各自实测确认；② 能说清"相向生长、撞上会怎样"；③ 手绘图补完两个箭头
 // 【注意】堆地址可能因堆管理器复用/合并块而局部乱序，看趋势即可；若真乱序，那本身就是发现，记下来
 // 【参考代码】（#pragma region 折叠 + 注释，先自己写再对照）
@@ -73,21 +73,44 @@ void f3(void);
 void f2(void);
 void f1(void);
 
+int         g_init = 10;        // 普通已初始化全局 → 期望进 .data
+const int   g_const = 42;        // 只读全局       → 期望进 .rodata
+const char* lit = "abc";     // 指针变量在 .data；字符串本体在 .rodata
+
 int main(void) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
     // TODO：先填【预测】，再补全栈/堆地址打印并运行
+    printf("g_init  (期望 .data)   : %p\n", (void*)&g_init);
+    printf("g_const (期望 .rodata) : %p\n", (void*)&g_const);
+    printf("lit 字符串本体.rodata  : %p\n", (void*)lit);
 
+    //printf("--- 栈：调用越深，地址往哪走？ ---\n");
+    //f1();//预测f1到f3的朝向是向堆的方向 高低不知道
+
+    //printf("--- 堆：连续 malloc，地址往哪走？ ---\n");
+    //int* p[4];
+    //for (int i = 0; i < 4; i++) {
+    //    p[i] = (int*)malloc(sizeof(int));
+    //    if (!p[i]) return 1;
+    //    printf("第 %d 块 : %p\n", i + 1, (void*)p[i]);//预测p[0]到p[4]的朝向是向栈的方向 高低不知道
+    //}
+    //for (int i = 0; i < 4; i++) free(p[i]);
     return 0;
 }
 
 void f3(void) {
-    // TODO
+    int x3 = 3;
+    printf("f3  局部变量 &x3 : %p\n", (void*)&x3);
 }
 void f2(void) {
-    // TODO
+    int x2 = 2;
+    printf("f2  局部变量 &x2 : %p\n", (void*)&x2);
+    f3();
 }
 void f1(void) {
-    // TODO
+    int x1 = 1;
+    printf("f1  局部变量 &x1 : %p\n", (void*)&x1);
+    f2();
 }
