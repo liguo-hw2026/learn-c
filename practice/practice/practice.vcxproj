@@ -259,7 +259,11 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day28_struct.c">
-      <!-- main() 由本文件提供（第5周第1天 结构体定义/访问/数组/指针 + 传值vs传指针） -->
+      <!-- 从生成中排除：main() 由 day29_struct_array.c（第5周第2天）提供，避免 LNK2005 多重定义（day28 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day29_struct_array.c">
+      <!-- main() 由本文件提供（第5周第2天 结构体数组/嵌套结构体/初始化器） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->
