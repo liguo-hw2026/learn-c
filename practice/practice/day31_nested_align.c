@@ -72,9 +72,13 @@ int main(void) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
+    printf("outer.x=%zu,outer.y=%zu,outer.z=%zu\n", offsetof(Outer, x), offsetof(Outer, y), offsetof(Outer, z));//预测 x@0 y@4 z@12
+    printf("sizeof(Outer)=%zu\n", sizeof(Outer));//预测4（补3）+8+4（补3）=16
+    printf("sizeof(Flags)=%zu\n", sizeof(struct Flags));//预测4 sizeof由类型int大小决定
     // TODO ①：用 offsetof 打印 Outer 三个成员偏移，预测 y@4（Inner 的对齐是 4，不是其 sizeof 8）
     // TODO ②：打印 sizeof(Outer)（预测16）与 sizeof(struct Flags)（预测4）
-    // TODO ③：自测口述 — 位域为何不能对其成员取地址？MSVC 与 GCC 位域打包顺序不同意味着什么？
-    show_nested();
+    // TODO ③：自测口述 — 位域为何不能对其成员取地址？地址是按字节取的 位没有地址可取 
+    // MSVC 与 GCC 位域打包顺序不同意味着什么？这个还没学 我的理解是 MSVC和GCC位域打包顺序不一样 跨平台后 成员位置就乱了
+    //show_nested();
     return 0;
 }

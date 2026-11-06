@@ -271,7 +271,14 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day31_nested_align.c">
-      <!-- main() 由本文件提供（第5周第4天 结构体嵌套对齐与位域） -->
+      <!-- 从生成中排除：main() 由 day32_const_static_extern.c（第5周第5天）提供，避免 LNK2005 多重定义（day31 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day32_helper.c">
+      <!-- 配套文件（无 main，随工程链接）：提供 day32 的 extern 演示全局符号 -->
+    </ClCompile>
+    <ClCompile Include="day32_const_static_extern.c">
+      <!-- main() 由本文件提供（第5周第5天 const/static/extern 与作用域链接属性） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->
