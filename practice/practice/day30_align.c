@@ -59,13 +59,16 @@ int main(void) {
 #pragma endregion
 
 // ============ 你的实现区（手敲；参考代码在上方折叠区）============
-typedef struct { char a; int b; char c; } S1;
-typedef struct { int b; char a; char c; } S2;
-
+typedef struct { char a; int b; char c; } S1;//sizeof（S1）=12，a在@0,b在@4,c在@8
+typedef struct { int b; char a; char c; } S2;//sizeof（S2）=8，b在@0,a在@4,c在@5 S2更省 两个连续char型排列＜4 在一起 节省了空间
+#pragma pack(push,1)
+typedef struct { char a; int b; char c; } S1p;
+#pragma pack(pop)
 // TODO：实现 show_layout，打印 S1/S2 的 sizeof 与各成员 offsetof（先用上面预测值，跑完再核对）
 void show_layout(void) {
-    // printf("S1  sizeof=%zu  a@%zu b@%zu c@%zu\n", ...);
-    // printf("S2  sizeof=%zu\n", ...);
+     printf("S1  sizeof=%zu  a@%zu b@%zu c@%zu\n",sizeof(S1), offsetof(S1,a),offsetof(S1,b), offsetof(S1, c));
+     printf("S1p sizeof=%zu  a@%zu b@%zu c@%zu\n", sizeof(S1p), offsetof(S1p, a), offsetof(S1p, b), offsetof(S1p, c));//sizeof(S1p)=6,a在@0,b在@1,c在@5
+     printf("S2  sizeof=%zu\n",sizeof(S2));
 }
 
 int main(void) {

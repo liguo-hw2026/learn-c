@@ -267,7 +267,11 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="day30_align.c">
-      <!-- main() 由本文件提供（第5周第3天 内存对齐与 sizeof 手算） -->
+      <!-- 从生成中排除：main() 由 day31_nested_align.c（第5周第4天）提供，避免 LNK2005 多重定义（day30 已闭环归档） -->
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="day31_nested_align.c">
+      <!-- main() 由本文件提供（第5周第4天 结构体嵌套对齐与位域） -->
     </ClCompile>
     <ClCompile Include="mymath.c" />
     <!-- TODO4 配套实现文件（无 main，随工程链接；提供 square() 实现） -->
