@@ -92,17 +92,33 @@ typedef struct {
 // TODO：实现 make_device，返回一个初始化好的 Device（注意：返回的是 d 的一份拷贝）
 Device make_device(const char* n, int id, float t) {
     Device d = { 0 };   // 预测：返回时调用处拿到的是 d 的拷贝（与 day28 传指针对比）
-    // TODO：把 n 拷进 d.name（用 strncpy 防溢出），填 d.sens 的三个成员
+    strncpy(d.name, n, sizeof(d.name) - 1);
+    d.name[sizeof(d.name) - 1] = '\0';
+    d.sens.id = id;
+    d.sens.temp = t;
+    d.sens.status = 0;
     return d;
 }
+void output_r(Sensor r[], int n);
 
 int main(void) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
+    Device d = { {"PC"},{33,55.5,1} };
+    printf("d.sens.temp=%f\n", d.sens.temp);
+    Sensor readings[3] = { {11,1.1,111},{22,2.2,222},{33,3.3,333}
+    };
+    //output_r(readings, 3);
+    Device d2=make_device(d.name,d.sens.id,d.sens.temp);
+    printf("d2.name=%s,d2.sens.id=%d,d2.sens.temp=%f,d2.sens.status=%d\n",d2.name,d2.sens.id, d2.sens.temp, d2.sens.status);
     // TODO ①：用初始化器定义嵌套结构体 d（含 name 与 sens 两层），预测 d.sens.temp 可访问
     // TODO ②：用连续 . 访问 d.sens.temp 并打印（预测：d.sens.temp）
     // TODO ③：用初始化器定义结构体数组 readings[3]，循环打印每个成员的 id 与 temp
     // TODO ④：调用 make_device，打印返回值，观察"返回=拷贝"（对比 day28 传指针能原地改）
     return 0;
+}
+void output_r(Sensor r[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("readings[%d].id=%d,readings[%d].temp=%f,readings[%d].status=%d\n",i, r[i].id, i,r[i].temp,i, r[i].status);
 }
