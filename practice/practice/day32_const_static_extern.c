@@ -72,35 +72,40 @@ int main(void) {
 
 // ============ 你的实现区（手敲；参考代码在上方折叠区）============
 // TODO ②：const 四种位置声明（空壳，解注后做"改值/改指向"实验）
-const int a = 10;
+const int a = 10;//a的值不能改
 int b = 20;
 int c = 30;
-// const int* p1 = &b;
-// int* const p2 = &b;
-// const int* const p3 = &b;
+ const int* p1 = &b;//*p1 也就是b不能改
+ int* const p2 = &b;//p2 也就是b的地址不能改
+ const int* const p3 = &b;//p3 *p3 也就是b的地址和b的值都不能改
 
 // TODO ③：实现 counter——static 局部计数（空壳）
 int counter(void) {
-    // static int n = 0;
-    // n++;
-    // return n;
+     static int n = 0;
+     n++;
+     return n;
 }
 
 // TODO ⑤：extern 声明（定义见 day32_helper.c）（空壳）
-// extern int g_shared;
-// extern void helper_print(void);
+ extern int g_shared;
+ extern void helper_print(void);
 
 int main(void) {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
     // TODO ②：分别解注下面两行之一，观察谁报编译错（验证 const 位置语义）
-    // *p1 = 5;
-    // p2 = &c;
+    // *p1 = 5;//和预测一样 还没运行程序直接红线报错 必须是可修改的左值 *p1是const 不能修改
+     //p2 = &c; 和预测一样 还没运行程序直接红线报错 必须是可修改的左值 p2是const 不能修改
+    p1 = &a;//预测地址a和p的值是一样的
+    //printf("adda=%p,addp1=%p\n", &a, p1);和预测一致
+    //*p2 = 5;//预测5正常输出
+    //printf("*p2=%d\n", *p2);和预测一致
 
     // TODO ③：调 3 次 counter，预测输出 1 2 3（验证 static 局部跨调用保持）
-    // printf("counter: %d %d %d\n", counter(), counter(), counter());
-
+    // printf("counter: %d %d %d\n", counter(), counter(), counter());//预测1,2,3 这里有问题 输出是3,2,1 是不是说明函数的运行顺序在一行中是从右往左的
+    //printf("g_shared=%d\n", g_shared);//helper文件中g_shared改为static静态储存变量 则只在static所在文件中生效 跨文件调用失败 报错LNK200 LNK1120
+    //helper_print();
     // TODO ⑤：用 extern 符号（验证跨文件共享）
     // printf("g_shared=%d\n", g_shared);
     // helper_print();
